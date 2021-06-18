@@ -18,15 +18,16 @@ private let linkCategoryList: [LinkCategory] = [
 ]
 
 struct ContentView: View {
+    @StateObject var dataManager = DataManager()
+
     var body: some View {
         NavigationView {
-            List(linkCategoryList) { linkCategory in
+            List(dataManager.categories, id: \.id) { category in
                 NavigationLink(destination: LinkDetailView()) {
-                    Text(linkCategory.name)
+                    Text(category.name)
                 }
-            }.navigationTitle("Categories")
-        }.onAppear {
-            loadAppData()
+            }
+            .navigationTitle("Categories")
         }
     }
 }

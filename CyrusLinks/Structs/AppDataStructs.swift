@@ -4,6 +4,7 @@
 //
 //  Created by Aaron Krauss on 6/18/21.
 //
+import Foundation
 
 struct AppLink {
     var name: String;
@@ -15,7 +16,8 @@ struct AppSubCategory {
     var links: [AppLink];
 }
 
-struct AppCategory {
+struct AppCategory: Identifiable {
+    let id = UUID();
     var name: String;
     var subCategories: [AppSubCategory];
 }
