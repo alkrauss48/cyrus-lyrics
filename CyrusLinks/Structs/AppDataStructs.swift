@@ -11,7 +11,9 @@ struct AppLink {
     var url: String;
 }
 
-struct AppSubCategory {
+struct AppSubCategory: Identifiable {
+    let id = UUID();
+
     var name: String;
     var links: [AppLink];
 }
