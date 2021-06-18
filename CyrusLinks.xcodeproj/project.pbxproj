@@ -11,6 +11,11 @@
 		DD50F189267CB85B0024D448 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F188267CB85B0024D448 /* ContentView.swift */; };
 		DD50F18B267CB85C0024D448 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18A267CB85C0024D448 /* Assets.xcassets */; };
 		DD50F18E267CB85C0024D448 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */; };
+		DD50F197267CB8DF0024D448 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F196267CB8DF0024D448 /* WebView.swift */; };
+		DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F199267CBE9B0024D448 /* LinkDetailView.swift */; };
+		DD50F19D267D01280024D448 /* LoadData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F19C267D01280024D448 /* LoadData.swift */; };
+		DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A1267D08E00024D448 /* GSheetStructs.swift */; };
+		DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A6267D08F60024D448 /* AppDataStructs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +25,11 @@
 		DD50F18A267CB85C0024D448 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DD50F18F267CB85C0024D448 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD50F196267CB8DF0024D448 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		DD50F199267CBE9B0024D448 /* LinkDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
+		DD50F19C267D01280024D448 /* LoadData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadData.swift; sourceTree = "<group>"; };
+		DD50F1A1267D08E00024D448 /* GSheetStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSheetStructs.swift; sourceTree = "<group>"; };
+		DD50F1A6267D08F60024D448 /* AppDataStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataStructs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,11 +62,15 @@
 		DD50F185267CB85B0024D448 /* CyrusLinks */ = {
 			isa = PBXGroup;
 			children = (
+				DD50F19F267D07A10024D448 /* Structs */,
 				DD50F186267CB85B0024D448 /* CyrusLinksApp.swift */,
 				DD50F188267CB85B0024D448 /* ContentView.swift */,
 				DD50F18A267CB85C0024D448 /* Assets.xcassets */,
 				DD50F18F267CB85C0024D448 /* Info.plist */,
 				DD50F18C267CB85C0024D448 /* Preview Content */,
+				DD50F196267CB8DF0024D448 /* WebView.swift */,
+				DD50F199267CBE9B0024D448 /* LinkDetailView.swift */,
+				DD50F19C267D01280024D448 /* LoadData.swift */,
 			);
 			path = CyrusLinks;
 			sourceTree = "<group>";
@@ -67,6 +81,15 @@
 				DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		DD50F19F267D07A10024D448 /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				DD50F1A1267D08E00024D448 /* GSheetStructs.swift */,
+				DD50F1A6267D08F60024D448 /* AppDataStructs.swift */,
+			);
+			path = Structs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,8 +161,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD50F197267CB8DF0024D448 /* WebView.swift in Sources */,
+				DD50F19D267D01280024D448 /* LoadData.swift in Sources */,
+				DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */,
 				DD50F189267CB85B0024D448 /* ContentView.swift in Sources */,
 				DD50F187267CB85B0024D448 /* CyrusLinksApp.swift in Sources */,
+				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
+				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
