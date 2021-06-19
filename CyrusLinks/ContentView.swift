@@ -28,6 +28,15 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Categories")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        dataManager.loadAppData()
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+            }
         }
     }
 }

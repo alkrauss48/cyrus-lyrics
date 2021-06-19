@@ -23,7 +23,7 @@ class DataManager: ObservableObject {
             
             setCategories(newCategories: existingCategories!)
         } else {
-            //loadAppData()
+            loadAppData()
         }
     }
     
