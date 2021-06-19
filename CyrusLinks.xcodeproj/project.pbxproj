@@ -17,6 +17,7 @@
 		DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A1267D08E00024D448 /* GSheetStructs.swift */; };
 		DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A6267D08F60024D448 /* AppDataStructs.swift */; };
 		DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1AB267D31870024D448 /* CategoryDetailView.swift */; };
+		DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		DD50F1A1267D08E00024D448 /* GSheetStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSheetStructs.swift; sourceTree = "<group>"; };
 		DD50F1A6267D08F60024D448 /* AppDataStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataStructs.swift; sourceTree = "<group>"; };
 		DD50F1AB267D31870024D448 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
+		DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCategoryDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 				DD50F199267CBE9B0024D448 /* LinkDetailView.swift */,
 				DD50F19C267D01280024D448 /* LoadData.swift */,
 				DD50F1AB267D31870024D448 /* CategoryDetailView.swift */,
+				DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */,
 			);
 			path = CyrusLinks;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
 				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
 				DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */,
+				DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

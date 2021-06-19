@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct LinkDetailView: View {
+    let link: AppLink;
+    
     var body: some View {
-        SwiftUIWebView(url: URL(string: "https://spreadsheets.google.com/feeds/cells/1JfkF-N492ygBLMcHQhXUFl-MtlMGQz35Vco4caiVw9c/1/public/full?alt=json"))
+//        Text(link.url)
+        SwiftUIWebView(url: URL(string: link.url))
     }
 }
 
-struct LinkDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        LinkDetailView()
-    }
-}
+//struct LinkDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LinkDetailView()
+//    }
+//}

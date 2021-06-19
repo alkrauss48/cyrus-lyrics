@@ -109,6 +109,7 @@ class DataManager: ObservableObject {
                     links: []
                 )
 
+                // Add the new sub-category and sort them all
                 tempCategories[categoryIndex].subCategories.append(newSubCategory)
 
                 subCategoryIndex = tempCategories[categoryIndex].subCategories.count - 1
@@ -123,18 +124,25 @@ class DataManager: ObservableObject {
                 linkUrlCell!.data
             )
 
+            // Add the new link and sort them all
             tempCategories[categoryIndex].subCategories[subCategoryIndex].links.append(
                 AppLink(name: linkNameCell.data, url: linkUrl))
         }
         
+        // Sort the categories by name
+        tempCategories.sort { $0.name < $1.name }
+        
+        // Publish the categories so the main thread and view will trigger UI updates
         DispatchQueue.main.async {
             self.categories = tempCategories
         }
-
-        print(self.categories)
     }
 
     func getDefaultGoogleUrl(subCategoryCell: GoogleSheetCell, linkNameCell: GoogleSheetCell) -> String {
-        return "https://www.google.com/search?q=\(linkNameCell.data) by \(subCategoryCell.data) lyrics"
+        // Make the URL google-able
+        let url = "https://www.google.com/search?q=\(linkNameCell.data) by \(subCategoryCell.data) lyrics"
+        let serializedUrl = url.replacingOccurrences(of: " ", with: "+")
+        
+        return serializedUrl
     }
 }

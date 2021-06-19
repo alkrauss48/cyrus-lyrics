@@ -6,14 +6,14 @@
 //
 import Foundation
 
-struct AppLink {
+struct AppLink: Identifiable {
+    let id = UUID();
     var name: String;
     var url: String;
 }
 
 struct AppSubCategory: Identifiable {
     let id = UUID();
-
     var name: String;
     var links: [AppLink];
 }

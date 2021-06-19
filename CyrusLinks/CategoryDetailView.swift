@@ -11,13 +11,10 @@ struct CategoryDetailView: View {
     var category: AppCategory
 
     var body: some View {
-        NavigationView {
-            List(category.subCategories, id: \.id) { subCategory in
-                NavigationLink(destination: LinkDetailView()) {
-                    Text(subCategory.name)
-                }
+        List(category.subCategories.sorted { $0.name < $1.name }, id: \.id) { subCategory in
+            NavigationLink(destination: SubCategoryDetailView(subCategory: subCategory)) {
+                Text(subCategory.name)
             }
-            .navigationTitle(category.name)
         }
     }
 }
