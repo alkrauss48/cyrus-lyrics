@@ -81,6 +81,7 @@ class DataManager: ObservableObject {
             guard let subCategoryCell = cells.first(where: { $0.col == "2" }) else { continue }
             guard let linkNameCell = cells.first(where: { $0.col == "3" }) else { continue }
             let linkUrlCell = cells.first(where: { $0.col == "4" })
+            let linkLyricsCell = cells.first(where: { $0.col == "5" })
 
             // Process the row's category
             var categoryIndex: Int
@@ -123,10 +124,17 @@ class DataManager: ObservableObject {
             ) : (
                 linkUrlCell!.data
             )
+            
+            let linkLyrics = linkLyricsCell == nil ? "" : linkLyricsCell!.data
 
             // Add the new link and sort them all
             tempCategories[categoryIndex].subCategories[subCategoryIndex].links.append(
-                AppLink(name: linkNameCell.data, url: linkUrl))
+                AppLink(
+                    name: linkNameCell.data,
+                    url: linkUrl,
+                    lyrics: linkLyrics
+                )
+            )
         }
         
         // Sort the categories by name

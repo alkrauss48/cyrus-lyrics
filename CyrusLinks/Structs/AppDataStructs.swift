@@ -10,6 +10,7 @@ struct AppLink: Identifiable {
     let id = UUID();
     var name: String;
     var url: String;
+    var lyrics: String;
 }
 
 struct AppSubCategory: Identifiable {

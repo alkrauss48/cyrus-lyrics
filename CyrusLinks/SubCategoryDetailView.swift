@@ -15,7 +15,7 @@ struct SubCategoryDetailView: View {
             NavigationLink(destination: LinkDetailView(link: link)) {
                 Text(link.name)
             }
-        }
+        }.navigationTitle(subCategory.name)
     }
 }
 

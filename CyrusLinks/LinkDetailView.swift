@@ -11,8 +11,14 @@ struct LinkDetailView: View {
     let link: AppLink;
     
     var body: some View {
-//        Text(link.url)
-        SwiftUIWebView(url: URL(string: link.url))
+        if link.lyrics.isEmpty {
+            SwiftUIWebView(url: URL(string: link.url)).navigationTitle(link.name)
+        } else {
+            ScrollView {
+                Text(link.lyrics)
+                    .padding()
+            }.navigationTitle(link.name)
+        }
     }
 }
 
