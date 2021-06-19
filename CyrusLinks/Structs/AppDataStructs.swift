@@ -6,21 +6,21 @@
 //
 import Foundation
 
-struct AppLink: Identifiable {
-    let id = UUID();
+struct AppLink: Identifiable, Codable {
+    var id = UUID();
     var name: String;
     var url: String;
     var lyrics: String;
 }
 
-struct AppSubCategory: Identifiable {
-    let id = UUID();
+struct AppSubCategory: Identifiable, Codable {
+    var id = UUID();
     var name: String;
     var links: [AppLink];
 }
 
-struct AppCategory: Identifiable {
-    let id = UUID();
+struct AppCategory: Identifiable, Codable {
+    var id = UUID();
     var name: String;
     var subCategories: [AppSubCategory];
 }

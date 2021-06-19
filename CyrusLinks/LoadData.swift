@@ -18,7 +18,20 @@ class DataManager: ObservableObject {
     @Published var categories = [AppCategory]()
   
     init() {
-        loadAppData()
+        if let data = UserDefaults.standard.value(forKey:"categories") as? Data {
+            let existingCategories = try? PropertyListDecoder().decode(Array<AppCategory>.self, from: data)
+            
+            setCategories(newCategories: existingCategories!)
+        } else {
+            //loadAppData()
+        }
+    }
+    
+    func setCategories(newCategories: [AppCategory]) {
+        // Publish the categories so the main thread and view will trigger UI updates
+        DispatchQueue.main.async {
+            self.categories = newCategories
+        }
     }
 
     func loadAppData() -> Void {
@@ -140,10 +153,10 @@ class DataManager: ObservableObject {
         // Sort the categories by name
         tempCategories.sort { $0.name < $1.name }
         
-        // Publish the categories so the main thread and view will trigger UI updates
-        DispatchQueue.main.async {
-            self.categories = tempCategories
-        }
+        setCategories(newCategories: tempCategories)
+        
+        // Save the categories in UserDefaults
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(tempCategories), forKey:"categories")
     }
 
     func getDefaultGoogleUrl(subCategoryCell: GoogleSheetCell, linkNameCell: GoogleSheetCell) -> String {
