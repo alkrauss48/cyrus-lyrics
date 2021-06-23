@@ -8,16 +8,35 @@
 import SwiftUI
 
 struct LinkDetailView: View {
-    let link: AppLink;
+    let shuffleManager = ShuffleManager()
+    @State var link: AppLink?
+    let shuffleType: String?
+    let shuffleId: UUID?
     
     var body: some View {
-        if link.lyrics.isEmpty {
-            SwiftUIWebView(url: URL(string: link.url)).navigationTitle(link.name)
-        } else {
-            ScrollView {
-                Text(link.lyrics)
-                    .padding()
-            }.navigationTitle(link.name)
+        VStack {
+            if link != nil {
+                if link!.lyrics.isEmpty {
+                    SwiftUIWebView(url: URL(string: link!.url)).navigationTitle(link!.name)
+                } else {
+                    ScrollView {
+                        Text(link!.lyrics)
+                            .padding()
+                    }.navigationTitle(link!.name)
+                }
+            }
+        }.onAppear {
+            if (link == nil) {
+                link = shuffleManager.shuffleBy(type: shuffleType!, id: shuffleId)
+            }
+        }.toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: {
+                    link = shuffleManager.next()
+                }) {
+                    Image(systemName: "arrow.forward")
+                }
+            }
         }
     }
 }

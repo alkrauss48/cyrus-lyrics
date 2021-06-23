@@ -24,3 +24,9 @@ struct AppCategory: Identifiable, Codable {
     var name: String;
     var subCategories: [AppSubCategory];
 }
+
+struct ShuffleData {
+    var type: String;
+    var id: UUID?;
+    var links: [AppLink]
+}

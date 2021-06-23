@@ -15,7 +15,15 @@ struct CategoryDetailView: View {
             NavigationLink(destination: SubCategoryDetailView(subCategory: subCategory)) {
                 Text(subCategory.name)
             }
-        }.navigationTitle(category.name)
+        }
+        .navigationTitle(category.name)
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "category", shuffleId: category.id)) {
+                    Image(systemName: "shuffle")
+                }
+            }
+        }
     }
 }
 

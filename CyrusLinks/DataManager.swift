@@ -19,14 +19,18 @@ class DataManager: ObservableObject {
   
     init() {
         if let data = UserDefaults.standard.value(forKey:"categories") as? Data {
-            let existingCategories = try? PropertyListDecoder().decode(Array<AppCategory>.self, from: data)
-            
-            setCategories(newCategories: existingCategories!)
+            loadAppData(data: data)
         } else {
-            loadAppData()
+            queryAppData()
         }
     }
     
+    func loadAppData(data: Data) {
+        let existingCategories = try? PropertyListDecoder().decode(Array<AppCategory>.self, from: data)
+        
+        setCategories(newCategories: existingCategories!)
+    }
+  
     func setCategories(newCategories: [AppCategory]) {
         // Publish the categories so the main thread and view will trigger UI updates
         DispatchQueue.main.async {
@@ -34,7 +38,7 @@ class DataManager: ObservableObject {
         }
     }
 
-    func loadAppData() -> Void {
+    func queryAppData() -> Void {
         // Create URL
         let url = URL(string: DATA_URL)
         guard let requestUrl = url else { fatalError() }

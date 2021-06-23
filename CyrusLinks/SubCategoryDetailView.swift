@@ -12,10 +12,18 @@ struct SubCategoryDetailView: View {
 
     var body: some View {
         List(subCategory.links.sorted { $0.name < $1.name }, id: \.id) { link in
-            NavigationLink(destination: LinkDetailView(link: link)) {
+            NavigationLink(destination: LinkDetailView(link: link, shuffleType: nil, shuffleId: nil)) {
                 Text(link.name)
             }
-        }.navigationTitle(subCategory.name)
+        }
+        .navigationTitle(subCategory.name)
+//        .toolbar {
+//            ToolbarItemGroup(placement: .navigationBarTrailing) {
+//                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "subCategory", shuffleId: subCategory.id)) {
+//                    Image(systemName: "shuffle")
+//                }
+//            }
+//        }
     }
 }
 
