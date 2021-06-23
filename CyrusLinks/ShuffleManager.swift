@@ -17,6 +17,10 @@ class ShuffleManager: ObservableObject {
         self.allCategories = existingCategories!
     }
     
+    func reset() {
+        self.shuffleData = nil
+    }
+    
     func next() -> AppLink {
         if (self.shuffleData!.links.isEmpty) {
             prepareShuffleData()
@@ -56,7 +60,7 @@ class ShuffleManager: ObservableObject {
             loadAppData(data: data)
         }
         
-        if shuffleData == nil || (shuffleData?.type != type || shuffleData?.id == id){
+        if shuffleData == nil || (shuffleData?.type != type || shuffleData?.id == id) {
             self.shuffleData = ShuffleData(type: type, id: id, links: [])
         }
         

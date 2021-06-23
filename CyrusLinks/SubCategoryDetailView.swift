@@ -17,13 +17,14 @@ struct SubCategoryDetailView: View {
             }
         }
         .navigationTitle(subCategory.name)
-//        .toolbar {
-//            ToolbarItemGroup(placement: .navigationBarTrailing) {
-//                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "subCategory", shuffleId: subCategory.id)) {
-//                    Image(systemName: "shuffle")
-//                }
-//            }
-//        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {Text("")}
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "subCategory", shuffleId: subCategory.id)) {
+                    Image(systemName: "shuffle")
+                }
+            }
+        }
     }
 }
 

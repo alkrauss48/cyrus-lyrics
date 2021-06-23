@@ -28,13 +28,19 @@ struct LinkDetailView: View {
         }.onAppear {
             if (link == nil) {
                 link = shuffleManager.shuffleBy(type: shuffleType!, id: shuffleId)
+            } else {
+                shuffleManager.reset()
             }
-        }.toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {
-                    link = shuffleManager.next()
-                }) {
-                    Image(systemName: "arrow.forward")
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {Text("")}
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if (shuffleManager.shuffleData != nil) {
+                    Button(action: {
+                        link = shuffleManager.next()
+                    }) {
+                        Image(systemName: "arrow.forward")
+                    }
                 }
             }
         }

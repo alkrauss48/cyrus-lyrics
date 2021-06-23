@@ -29,14 +29,16 @@ struct ContentView: View {
             }
             .navigationTitle("Categories")
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "all", shuffleId: nil)) {
-                        Image(systemName: "shuffle")
-                    }
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         dataManager.queryAppData()
                     }) {
                         Image(systemName: "arrow.clockwise")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "all", shuffleId: nil)) {
+                        Image(systemName: "shuffle")
                     }
                 }
             }
