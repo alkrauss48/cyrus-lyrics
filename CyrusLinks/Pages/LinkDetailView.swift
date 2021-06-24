@@ -17,15 +17,14 @@ struct LinkDetailView: View {
         VStack {
             if link != nil {
                 if link!.lyrics.isEmpty {
-                    SwiftUIWebView(url: URL(string: link!.url)).navigationTitle(link!.name)
+                    SwiftUIWebView(url: URL(string: link!.url))
                 } else {
-                    ScrollView {
-                        Text(link!.lyrics)
-                            .padding()
-                    }.navigationTitle(link!.name)
+                    LyricsView(lyrics: link!.lyrics)
                 }
             }
-        }.onAppear {
+        }
+        .navigationTitle(link != nil ? link!.name : "")
+        .onAppear {
             if (link == nil) {
                 link = shuffleManager.shuffleBy(type: shuffleType!, id: shuffleId)
             } else {
@@ -33,7 +32,7 @@ struct LinkDetailView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {Text("")}
+            ToolbarItemHack()
             ToolbarItem(placement: .navigationBarTrailing) {
                 if (shuffleManager.shuffleData != nil) {
                     Button(action: {

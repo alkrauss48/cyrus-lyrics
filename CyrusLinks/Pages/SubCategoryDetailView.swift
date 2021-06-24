@@ -18,7 +18,7 @@ struct SubCategoryDetailView: View {
         }
         .navigationTitle(subCategory.name)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {Text("")}
+            ToolbarItemHack()
             ShuffleToolbarItem(type: "subCategory", id: subCategory.id)
         }
     }
