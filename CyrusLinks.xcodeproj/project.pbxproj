@@ -19,6 +19,7 @@
 		DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1AB267D31870024D448 /* CategoryDetailView.swift */; };
 		DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */; };
 		DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */; };
+		DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		DD50F1AB267D31870024D448 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
 		DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCategoryDetailView.swift; sourceTree = "<group>"; };
 		DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleManager.swift; sourceTree = "<group>"; };
+		DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleToolbarItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,18 +70,14 @@
 		DD50F185267CB85B0024D448 /* CyrusLinks */ = {
 			isa = PBXGroup;
 			children = (
+				DD9D4F0D2683E68400AF67CE /* Components */,
+				DD9D4F0C2683E64200AF67CE /* Pages */,
+				DD9D4F0B2683E61C00AF67CE /* Services */,
 				DD50F19F267D07A10024D448 /* Structs */,
 				DD50F186267CB85B0024D448 /* CyrusLinksApp.swift */,
-				DD50F188267CB85B0024D448 /* ContentView.swift */,
 				DD50F18A267CB85C0024D448 /* Assets.xcassets */,
 				DD50F18F267CB85C0024D448 /* Info.plist */,
 				DD50F18C267CB85C0024D448 /* Preview Content */,
-				DD50F196267CB8DF0024D448 /* WebView.swift */,
-				DD50F199267CBE9B0024D448 /* LinkDetailView.swift */,
-				DD50F19C267D01280024D448 /* DataManager.swift */,
-				DD50F1AB267D31870024D448 /* CategoryDetailView.swift */,
-				DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */,
-				DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */,
 			);
 			path = CyrusLinks;
 			sourceTree = "<group>";
@@ -99,6 +97,35 @@
 				DD50F1A6267D08F60024D448 /* AppDataStructs.swift */,
 			);
 			path = Structs;
+			sourceTree = "<group>";
+		};
+		DD9D4F0B2683E61C00AF67CE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */,
+				DD50F19C267D01280024D448 /* DataManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		DD9D4F0C2683E64200AF67CE /* Pages */ = {
+			isa = PBXGroup;
+			children = (
+				DD50F188267CB85B0024D448 /* ContentView.swift */,
+				DD50F199267CBE9B0024D448 /* LinkDetailView.swift */,
+				DD50F1AB267D31870024D448 /* CategoryDetailView.swift */,
+				DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */,
+			);
+			path = Pages;
+			sourceTree = "<group>";
+		};
+		DD9D4F0D2683E68400AF67CE /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				DD50F196267CB8DF0024D448 /* WebView.swift */,
+				DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,6 +207,7 @@
 				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
 				DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */,
 				DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */,
+				DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

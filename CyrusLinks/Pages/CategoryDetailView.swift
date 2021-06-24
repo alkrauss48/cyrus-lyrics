@@ -18,11 +18,7 @@ struct CategoryDetailView: View {
         }
         .navigationTitle(category.name)
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "category", shuffleId: category.id)) {
-                    Image(systemName: "shuffle")
-                }
-            }
+            ShuffleToolbarItem(type: "category", id: category.id)
         }
     }
 }

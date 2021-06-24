@@ -7,16 +7,6 @@
 
 import SwiftUI
 
-struct LinkCategory: Identifiable {
-    let id = UUID()
-    var name: String
-}
-
-private let linkCategoryList: [LinkCategory] = [
-    LinkCategory(name: "Foo"),
-    LinkCategory(name: "Bar"),
-]
-
 struct ContentView: View {
     @StateObject var dataManager = DataManager()
 
@@ -36,11 +26,7 @@ struct ContentView: View {
                         Image(systemName: "arrow.clockwise")
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: LinkDetailView(link: nil, shuffleType: "all", shuffleId: nil)) {
-                        Image(systemName: "shuffle")
-                    }
-                }
+                ShuffleToolbarItem(type: "all", id: nil)
             }
         }
     }
