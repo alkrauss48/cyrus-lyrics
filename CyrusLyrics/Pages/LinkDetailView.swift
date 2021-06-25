@@ -25,11 +25,16 @@ struct LinkDetailView: View {
         }
         .navigationTitle(link != nil ? link!.name : "")
         .onAppear {
+            UIApplication.shared.isIdleTimerDisabled = true
+
             if (link == nil) {
                 link = shuffleManager.shuffleBy(type: shuffleType!, id: shuffleId)
             } else {
                 shuffleManager.reset()
             }
+        }
+        .onDisappear() {
+            UIApplication.shared.isIdleTimerDisabled = false
         }
         .toolbar {
             ToolbarItemHack()
