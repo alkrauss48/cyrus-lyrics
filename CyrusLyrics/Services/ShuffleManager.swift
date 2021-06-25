@@ -1,6 +1,6 @@
 //
 //  ShuffleManager.swift
-//  CyrusLinks
+//  CyrusLyrics
 //
 //  Created by Aaron Krauss on 6/19/21.
 //

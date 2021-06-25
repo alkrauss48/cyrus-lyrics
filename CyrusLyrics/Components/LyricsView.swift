@@ -1,6 +1,6 @@
 //
 //  LyricsView.swift
-//  CyrusLinks
+//  CyrusLyrics
 //
 //  Created by Aaron Krauss on 6/24/21.
 //

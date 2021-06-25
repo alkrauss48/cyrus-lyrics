@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD50F187267CB85B0024D448 /* CyrusLinksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F186267CB85B0024D448 /* CyrusLinksApp.swift */; };
+		DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */; };
 		DD50F189267CB85B0024D448 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F188267CB85B0024D448 /* ContentView.swift */; };
 		DD50F18B267CB85C0024D448 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18A267CB85C0024D448 /* Assets.xcassets */; };
 		DD50F18E267CB85C0024D448 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */; };
@@ -25,8 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DD50F183267CB85B0024D448 /* CyrusLinks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrusLinks.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD50F186267CB85B0024D448 /* CyrusLinksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyrusLinksApp.swift; sourceTree = "<group>"; };
+		DD50F183267CB85B0024D448 /* CyrusLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrusLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyrusLyricsApp.swift; sourceTree = "<group>"; };
 		DD50F188267CB85B0024D448 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DD50F18A267CB85C0024D448 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 		DD50F17A267CB85B0024D448 = {
 			isa = PBXGroup;
 			children = (
-				DD50F185267CB85B0024D448 /* CyrusLinks */,
+				DD50F185267CB85B0024D448 /* CyrusLyrics */,
 				DD50F184267CB85B0024D448 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,24 +66,24 @@
 		DD50F184267CB85B0024D448 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DD50F183267CB85B0024D448 /* CyrusLinks.app */,
+				DD50F183267CB85B0024D448 /* CyrusLyrics.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		DD50F185267CB85B0024D448 /* CyrusLinks */ = {
+		DD50F185267CB85B0024D448 /* CyrusLyrics */ = {
 			isa = PBXGroup;
 			children = (
 				DD9D4F0D2683E68400AF67CE /* Components */,
 				DD9D4F0C2683E64200AF67CE /* Pages */,
 				DD9D4F0B2683E61C00AF67CE /* Services */,
 				DD50F19F267D07A10024D448 /* Structs */,
-				DD50F186267CB85B0024D448 /* CyrusLinksApp.swift */,
+				DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */,
 				DD50F18A267CB85C0024D448 /* Assets.xcassets */,
 				DD50F18F267CB85C0024D448 /* Info.plist */,
 				DD50F18C267CB85C0024D448 /* Preview Content */,
 			);
-			path = CyrusLinks;
+			path = CyrusLyrics;
 			sourceTree = "<group>";
 		};
 		DD50F18C267CB85C0024D448 /* Preview Content */ = {
@@ -137,9 +137,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DD50F182267CB85B0024D448 /* CyrusLinks */ = {
+		DD50F182267CB85B0024D448 /* CyrusLyrics */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DD50F192267CB85C0024D448 /* Build configuration list for PBXNativeTarget "CyrusLinks" */;
+			buildConfigurationList = DD50F192267CB85C0024D448 /* Build configuration list for PBXNativeTarget "CyrusLyrics" */;
 			buildPhases = (
 				DD50F17F267CB85B0024D448 /* Sources */,
 				DD50F180267CB85B0024D448 /* Frameworks */,
@@ -149,9 +149,9 @@
 			);
 			dependencies = (
 			);
-			name = CyrusLinks;
-			productName = CyrusLinks;
-			productReference = DD50F183267CB85B0024D448 /* CyrusLinks.app */;
+			name = CyrusLyrics;
+			productName = CyrusLyrics;
+			productReference = DD50F183267CB85B0024D448 /* CyrusLyrics.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -168,7 +168,7 @@
 					};
 				};
 			};
-			buildConfigurationList = DD50F17E267CB85B0024D448 /* Build configuration list for PBXProject "CyrusLinks" */;
+			buildConfigurationList = DD50F17E267CB85B0024D448 /* Build configuration list for PBXProject "CyrusLyrics" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -181,7 +181,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DD50F182267CB85B0024D448 /* CyrusLinks */,
+				DD50F182267CB85B0024D448 /* CyrusLyrics */,
 			);
 		};
 /* End PBXProject section */
@@ -208,7 +208,7 @@
 				DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */,
 				DD50F189267CB85B0024D448 /* ContentView.swift in Sources */,
 				DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */,
-				DD50F187267CB85B0024D448 /* CyrusLinksApp.swift in Sources */,
+				DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */,
 				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
 				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
@@ -344,16 +344,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"CyrusLinks/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CyrusLyrics/Preview Content\"";
 				DEVELOPMENT_TEAM = V94WWSMKW4;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = CyrusLinks/Info.plist;
+				INFOPLIST_FILE = CyrusLyrics/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = aaronkrauss.CyrusLinks;
+				PRODUCT_BUNDLE_IDENTIFIER = aaronkrauss.CyrusLyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -366,16 +366,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"CyrusLinks/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"CyrusLyrics/Preview Content\"";
 				DEVELOPMENT_TEAM = V94WWSMKW4;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = CyrusLinks/Info.plist;
+				INFOPLIST_FILE = CyrusLyrics/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = aaronkrauss.CyrusLinks;
+				PRODUCT_BUNDLE_IDENTIFIER = aaronkrauss.CyrusLyrics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -385,7 +385,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DD50F17E267CB85B0024D448 /* Build configuration list for PBXProject "CyrusLinks" */ = {
+		DD50F17E267CB85B0024D448 /* Build configuration list for PBXProject "CyrusLyrics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD50F190267CB85C0024D448 /* Debug */,
@@ -394,7 +394,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DD50F192267CB85C0024D448 /* Build configuration list for PBXNativeTarget "CyrusLinks" */ = {
+		DD50F192267CB85C0024D448 /* Build configuration list for PBXNativeTarget "CyrusLyrics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD50F193267CB85C0024D448 /* Debug */,
