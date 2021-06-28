@@ -28,6 +28,11 @@ class DataManager: ObservableObject {
     func loadAppData(data: Data) {
         let existingCategories = try? PropertyListDecoder().decode(Array<AppCategory>.self, from: data)
         
+        if (existingCategories == nil) {
+            queryAppData()
+            return
+        }
+        
         setCategories(newCategories: existingCategories!)
     }
   
@@ -99,6 +104,7 @@ class DataManager: ObservableObject {
             guard let linkNameCell = cells.first(where: { $0.col == "3" }) else { continue }
             let linkUrlCell = cells.first(where: { $0.col == "4" })
             let linkLyricsCell = cells.first(where: { $0.col == "5" })
+            let linkSpotifyCell = cells.first(where: { $0.col == "6" })
 
             // Process the row's category
             var categoryIndex: Int
@@ -143,13 +149,15 @@ class DataManager: ObservableObject {
             )
             
             let linkLyrics = linkLyricsCell == nil ? "" : linkLyricsCell!.data
+            let linkSpotifyUrl = linkSpotifyCell == nil ? "" : linkSpotifyCell!.data
 
             // Add the new link and sort them all
             tempCategories[categoryIndex].subCategories[subCategoryIndex].links.append(
                 AppLink(
                     name: linkNameCell.data,
                     url: linkUrl,
-                    lyrics: linkLyrics
+                    lyrics: linkLyrics,
+                    spotifyUrl: linkSpotifyUrl
                 )
             )
         }

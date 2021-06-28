@@ -11,6 +11,7 @@ struct AppLink: Identifiable, Codable {
     var name: String;
     var url: String;
     var lyrics: String;
+    var spotifyUrl: String;
 }
 
 struct AppSubCategory: Identifiable, Codable {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD084C17268948ED009CF586 /* SpotifyButton.swift */; };
 		DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */; };
 		DD50F189267CB85B0024D448 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F188267CB85B0024D448 /* ContentView.swift */; };
 		DD50F18B267CB85C0024D448 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18A267CB85C0024D448 /* Assets.xcassets */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DD084C17268948ED009CF586 /* SpotifyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyButton.swift; sourceTree = "<group>"; };
 		DD50F183267CB85B0024D448 /* CyrusLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrusLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyrusLyricsApp.swift; sourceTree = "<group>"; };
 		DD50F188267CB85B0024D448 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */,
 				DD9D4F102684AB1700AF67CE /* LyricsView.swift */,
 				DD9D4F122684ABD400AF67CE /* ToolbarItemHack.swift */,
+				DD084C17268948ED009CF586 /* SpotifyButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -211,6 +214,7 @@
 				DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */,
 				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
+				DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */,
 				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
 				DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */,
 				DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */,

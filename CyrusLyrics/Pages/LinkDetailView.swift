@@ -21,6 +21,10 @@ struct LinkDetailView: View {
                 } else {
                     LyricsView(lyrics: link!.lyrics)
                 }
+                
+                if (!link!.spotifyUrl.isEmpty) {
+                    SpotifyButton(url: link!.spotifyUrl)
+                }
             }
         }
         .navigationTitle(link != nil ? link!.name : "")
