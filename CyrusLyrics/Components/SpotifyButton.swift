@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct SpotifyButton: View {
-    let url: String
+    let url: URL
     
     var body: some View {
         Button(action: {
-            UIApplication.shared.open(URL(string: url)!)
+            UIApplication.shared.open(url)
         }) {
             HStack(spacing: 2.0) {
                 Text("Open in Spotify")
@@ -31,6 +31,6 @@ struct SpotifyButton: View {
 
 struct SpotifyButton_Previews: PreviewProvider {
     static var previews: some View {
-        SpotifyButton(url: "foo")
+        SpotifyButton(url: URL(string: "foo")!)
     }
 }

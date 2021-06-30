@@ -23,7 +23,11 @@ struct LinkDetailView: View {
                 }
                 
                 if (!link!.spotifyUrl.isEmpty) {
-                    SpotifyButton(url: link!.spotifyUrl)
+                    let url = URL(string: link!.spotifyUrl)
+                    
+                    if UIApplication.shared.canOpenURL(url!) {
+                        SpotifyButton(url: url!)
+                    }
                 }
             }
         }
