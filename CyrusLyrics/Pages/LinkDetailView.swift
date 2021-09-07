@@ -31,7 +31,7 @@ struct LinkDetailView: View {
                 }
             }
         }
-        .navigationTitle(link != nil ? link!.name : "")
+        .navigationBarTitle(link != nil ? link!.name : "", displayMode: .inline)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
 
