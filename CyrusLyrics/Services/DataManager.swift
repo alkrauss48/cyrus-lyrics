@@ -12,16 +12,9 @@ import Foundation
 import Combine
 import SwiftUI
 
-// Google Sheet workflow found here:
-// https://benborgers.com/posts/google-sheets-json
-
-//let DATA_URL = "https://spreadsheets.google.com/feeds/cells/1JfkF-N492ygBLMcHQhXUFl-MtlMGQz35Vco4caiVw9c/1/public/full?alt=json"
-
-let DATA_URL = "https://docs.google.com/spreadsheets/d/1JfkF-N492ygBLMcHQhXUFl-MtlMGQz35Vco4caiVw9c/gviz/tq?tqx=out:json"
-
-
 class DataManager: ObservableObject {
     @Published var categories = [AppCategory]()
+    var dataAdapter = SheetsV2Adapter()
   
     init() {
         if let data = UserDefaults.standard.value(forKey:"categories") as? Data {
@@ -51,7 +44,7 @@ class DataManager: ObservableObject {
 
     func queryAppData() -> Void {
         // Create URL
-        let url = URL(string: DATA_URL)
+        let url = URL(string: dataAdapter.dataUrl)
         guard let requestUrl = url else { fatalError() }
 
         // Create URL Request
@@ -77,7 +70,6 @@ class DataManager: ObservableObject {
             // Convert HTTP Response Data to a simple String
             if let data = data, let dataString = String(data: data, encoding: .utf8) {
                 print("Response data string:\n \(dataString)")
-//                self.parseOldAppData(data: dataString)
                 self.parseAppData(data: dataString)
             }
 
@@ -87,99 +79,7 @@ class DataManager: ObservableObject {
     }
     
     func parseAppData(data: String!) {
-        let responseData = data.data(using: .utf8)!
-        
-        let start = responseData.index(responseData.startIndex, offsetBy: 47)
-        let end = responseData.index(responseData.endIndex, offsetBy: -2)
-        let range = start..<end
-
-        let jsonData = responseData[range]
-//        let jsonData = String(mySubstring)
-
-        
-        let gSheet: GoogleSheetNewFormat = try! JSONDecoder().decode(GoogleSheetNewFormat.self, from: jsonData)
-
-        let rows = gSheet.table.rows.map { $0.c }
-
-        self.processAppData(rows: rows)
-    }
-
-//    func parseOldAppData(data: String!) {
-//        let jsonData = data.data(using: .utf8)!
-//        let gSheet: GoogleSheetFormat = try! JSONDecoder().decode(GoogleSheetFormat.self, from: jsonData)
-//
-//        let cells = gSheet.feed.entries.map { $0.cell }
-//
-//        let rows = Dictionary(grouping: cells, by: { $0.row })
-//
-//        self.processOldAppData(rows: rows)
-//    }
-    
-    func processAppData(rows: [[GoogleSheetNewCell?]]) {
-        var tempCategories = [AppCategory]()
-        
-        for (rowIndex, row) in rows.enumerated() {
-            // Skip the first row, since that's headings
-            if rowIndex == 0 {
-                continue
-            }
-            
-            if (row.count < 3) {
-                continue
-            }
-
-            guard let categoryCell = row[0]?.data else { continue }
-            guard let subCategoryCell = row[1]?.data else { continue }
-            guard let linkNameCell = row[2]?.data else { continue }
-            let linkUrlCell = row[3]?.data
-            let linkLyricsCell = row[4]?.data
-            let linkSpotifyCell = row[5]?.data
-
-            // Process the row's category
-            var categoryIndex: Int
-            let matchedCategoryIndex = tempCategories.firstIndex(where: { $0.name == categoryCell })
-
-            if (matchedCategoryIndex == nil) {
-                let newCategory = AppCategory(
-                    name: categoryCell,
-                    subCategories: []
-                )
-
-                tempCategories.append(newCategory)
-
-                categoryIndex = tempCategories.count - 1
-            } else {
-                categoryIndex = matchedCategoryIndex!
-            }
-
-            // Process the row's sub-category
-            var subCategoryIndex: Int
-            let matchedSubCategoryIndex = tempCategories[categoryIndex].subCategories.firstIndex(where: { $0.name == subCategoryCell })
-
-            if (matchedSubCategoryIndex == nil) {
-                let newSubCategory = AppSubCategory(
-                    name: subCategoryCell,
-                    links: []
-                )
-
-                // Add the new sub-category and sort them all
-                tempCategories[categoryIndex].subCategories.append(newSubCategory)
-
-                subCategoryIndex = tempCategories[categoryIndex].subCategories.count - 1
-            } else {
-                subCategoryIndex = matchedSubCategoryIndex!
-            }
-            
-            // Add the new link and sort them all
-            tempCategories[categoryIndex].subCategories[subCategoryIndex].links.append(
-                AppLink(
-                    name: linkNameCell,
-                    url: linkUrlCell ?? self.getDefaultGoogleUrl(name: linkNameCell, subCategory: subCategoryCell),
-                    lyrics: linkLyricsCell ?? "",
-                    spotifyUrl: linkSpotifyCell ?? ""
-                )
-            )
-        }
+        var tempCategories = dataAdapter.parseCategories(data: data)
         
         // Sort the categories by name
         tempCategories.sort { $0.name < $1.name }
@@ -188,94 +88,5 @@ class DataManager: ObservableObject {
         
         // Save the categories in UserDefaults
         UserDefaults.standard.set(try? PropertyListEncoder().encode(tempCategories), forKey:"categories")
-    }
-
-//    func processOldAppData(rows: Dictionary<String, [GoogleSheetCell]>!) {
-//        var tempCategories = [AppCategory]()
-//
-//        for (key, cells) in rows {
-//            // Skip the first row, since that's headings
-//            if key == "1" {
-//                continue
-//            }
-//
-//            guard let categoryCell = cells.first(where: { $0.col == "1" }) else { continue }
-//            guard let subCategoryCell = cells.first(where: { $0.col == "2" }) else { continue }
-//            guard let linkNameCell = cells.first(where: { $0.col == "3" }) else { continue }
-//            let linkUrlCell = cells.first(where: { $0.col == "4" })
-//            let linkLyricsCell = cells.first(where: { $0.col == "5" })
-//            let linkSpotifyCell = cells.first(where: { $0.col == "6" })
-//
-//            // Process the row's category
-//            var categoryIndex: Int
-//            let matchedCategoryIndex = tempCategories.firstIndex(where: { $0.name == categoryCell.data })
-//
-//            if (matchedCategoryIndex == nil) {
-//                let newCategory = AppCategory(
-//                    name: categoryCell.data,
-//                    subCategories: []
-//                )
-//
-//                tempCategories.append(newCategory)
-//
-//                categoryIndex = tempCategories.count - 1
-//            } else {
-//                categoryIndex = matchedCategoryIndex!
-//            }
-//
-//            // Process the row's sub-category
-//            var subCategoryIndex: Int
-//            let matchedSubCategoryIndex = tempCategories[categoryIndex].subCategories.firstIndex(where: { $0.name == subCategoryCell.data })
-//
-//            if (matchedSubCategoryIndex == nil) {
-//                let newSubCategory = AppSubCategory(
-//                    name: subCategoryCell.data,
-//                    links: []
-//                )
-//
-//                // Add the new sub-category and sort them all
-//                tempCategories[categoryIndex].subCategories.append(newSubCategory)
-//
-//                subCategoryIndex = tempCategories[categoryIndex].subCategories.count - 1
-//            } else {
-//                subCategoryIndex = matchedSubCategoryIndex!
-//            }
-//
-//            // Process the row's link
-//            let linkUrl = linkUrlCell == nil ? (
-//                self.getDefaultGoogleUrl(subCategoryCell: subCategoryCell, linkNameCell: linkNameCell)
-//            ) : (
-//                linkUrlCell!.data
-//            )
-//
-//            let linkLyrics = linkLyricsCell == nil ? "" : linkLyricsCell!.data
-//            let linkSpotifyUrl = linkSpotifyCell == nil ? "" : linkSpotifyCell!.data
-//
-//            // Add the new link and sort them all
-//            tempCategories[categoryIndex].subCategories[subCategoryIndex].links.append(
-//                AppLink(
-//                    name: linkNameCell.data,
-//                    url: linkUrl,
-//                    lyrics: linkLyrics,
-//                    spotifyUrl: linkSpotifyUrl
-//                )
-//            )
-//        }
-//
-//        // Sort the categories by name
-//        tempCategories.sort { $0.name < $1.name }
-//
-//        setCategories(newCategories: tempCategories)
-//
-//        // Save the categories in UserDefaults
-//        UserDefaults.standard.set(try? PropertyListEncoder().encode(tempCategories), forKey:"categories")
-//    }
-
-    func getDefaultGoogleUrl(name: String, subCategory: String) -> String {
-        // Make the URL google-able
-        let url = "https://www.google.com/search?q=\(name) by \(subCategory) lyrics"
-        let serializedUrl = url.replacingOccurrences(of: " ", with: "+")
-        
-        return serializedUrl
     }
 }
