@@ -27,6 +27,7 @@
 		DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */; };
 		DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F102684AB1700AF67CE /* LyricsView.swift */; };
 		DD9D4F132684ABD400AF67CE /* ToolbarItemHack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F122684ABD400AF67CE /* ToolbarItemHack.swift */; };
+		DDCB2A892791FC3B0067617A /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB2A882791FC3B0067617A /* MainMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleToolbarItem.swift; sourceTree = "<group>"; };
 		DD9D4F102684AB1700AF67CE /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
 		DD9D4F122684ABD400AF67CE /* ToolbarItemHack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarItemHack.swift; sourceTree = "<group>"; };
+		DDCB2A882791FC3B0067617A /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +171,7 @@
 				DD9D4F102684AB1700AF67CE /* LyricsView.swift */,
 				DD9D4F122684ABD400AF67CE /* ToolbarItemHack.swift */,
 				DD084C17268948ED009CF586 /* SpotifyButton.swift */,
+				DDCB2A882791FC3B0067617A /* MainMenu.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				DD50F189267CB85B0024D448 /* ContentView.swift in Sources */,
 				DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */,
 				DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */,
+				DDCB2A892791FC3B0067617A /* MainMenu.swift in Sources */,
 				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
 				DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */,
