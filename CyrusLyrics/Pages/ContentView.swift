@@ -16,16 +16,11 @@ struct ContentView: View {
                 NavigationLink(destination: CategoryDetailView(category: category)) {
                     Text(category.name)
                 }
+            }.refreshable {
+                dataManager.queryAppData()
             }
             .navigationTitle("Categories")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        dataManager.queryAppData()
-                    }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
                 ShuffleToolbarItem(type: "all", id: nil)
             }
         }
