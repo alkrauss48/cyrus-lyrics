@@ -12,6 +12,9 @@
 		DD01D8C126E7854400A657F8 /* SheetsV2Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01D8C026E7854400A657F8 /* SheetsV2Adapter.swift */; };
 		DD01D8C426E789A800A657F8 /* SheetsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01D8C326E789A800A657F8 /* SheetsAdapter.swift */; };
 		DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD084C17268948ED009CF586 /* SpotifyButton.swift */; };
+		DD109A2E27B1DA8A0079F61D /* CategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A2D27B1DA890079F61D /* CategoryList.swift */; };
+		DD109A3027B1FCBE0079F61D /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A2F27B1FCBE0079F61D /* StateManager.swift */; };
+		DD109A3227B22E2E0079F61D /* SetDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A3127B22E2E0079F61D /* SetDataView.swift */; };
 		DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */; };
 		DD50F189267CB85B0024D448 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F188267CB85B0024D448 /* ContentView.swift */; };
 		DD50F18B267CB85C0024D448 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18A267CB85C0024D448 /* Assets.xcassets */; };
@@ -36,6 +39,9 @@
 		DD01D8C026E7854400A657F8 /* SheetsV2Adapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsV2Adapter.swift; sourceTree = "<group>"; };
 		DD01D8C326E789A800A657F8 /* SheetsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsAdapter.swift; sourceTree = "<group>"; };
 		DD084C17268948ED009CF586 /* SpotifyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyButton.swift; sourceTree = "<group>"; };
+		DD109A2D27B1DA890079F61D /* CategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryList.swift; sourceTree = "<group>"; };
+		DD109A2F27B1FCBE0079F61D /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
+		DD109A3127B22E2E0079F61D /* SetDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDataView.swift; sourceTree = "<group>"; };
 		DD50F183267CB85B0024D448 /* CyrusLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrusLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyrusLyricsApp.swift; sourceTree = "<group>"; };
 		DD50F188267CB85B0024D448 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -148,6 +154,7 @@
 				DD01D8B926E7834800A657F8 /* DataAdapters */,
 				DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */,
 				DD50F19C267D01280024D448 /* DataManager.swift */,
+				DD109A2F27B1FCBE0079F61D /* StateManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -159,6 +166,8 @@
 				DD50F199267CBE9B0024D448 /* LinkDetailView.swift */,
 				DD50F1AB267D31870024D448 /* CategoryDetailView.swift */,
 				DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */,
+				DD109A2D27B1DA890079F61D /* CategoryList.swift */,
+				DD109A3127B22E2E0079F61D /* SetDataView.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -248,10 +257,12 @@
 				DD01D8C126E7854400A657F8 /* SheetsV2Adapter.swift in Sources */,
 				DD50F197267CB8DF0024D448 /* WebView.swift in Sources */,
 				DD50F19D267D01280024D448 /* DataManager.swift in Sources */,
+				DD109A3027B1FCBE0079F61D /* StateManager.swift in Sources */,
 				DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */,
 				DD50F189267CB85B0024D448 /* ContentView.swift in Sources */,
 				DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */,
 				DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */,
+				DD109A2E27B1DA8A0079F61D /* CategoryList.swift in Sources */,
 				DDCB2A892791FC3B0067617A /* MainMenu.swift in Sources */,
 				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
@@ -260,6 +271,7 @@
 				DD01D8C426E789A800A657F8 /* SheetsAdapter.swift in Sources */,
 				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
 				DD01D8BB26E7838500A657F8 /* SheetsV1Adapter.swift in Sources */,
+				DD109A3227B22E2E0079F61D /* SetDataView.swift in Sources */,
 				DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */,
 				DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */,
 				DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */,

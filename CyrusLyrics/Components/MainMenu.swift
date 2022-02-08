@@ -19,7 +19,7 @@ struct MainMenu: View {
             }
             .background(Color.gray.opacity(0.3))
             .opacity(self.isOpen ? 1.0 : 0.0)
-            .animation(Animation.easeIn.delay(0.25))
+            .animation(Animation.easeInOut(duration: 0.25), value: isOpen)
             .onTapGesture {
                 self.menuClose()
             }
@@ -29,8 +29,8 @@ struct MainMenu: View {
                     .frame(width: self.width)
                     .background(Color.white)
                     .offset(x: self.isOpen ? 0 : -self.width)
-                    .animation(.default)
-                
+                    .animation(Animation.easeInOut(duration: 0.25), value: isOpen)
+
                 Spacer()
             }
         }
@@ -45,16 +45,25 @@ struct MainMenu: View {
 //}
 
 struct MenuContent: View {
+    @StateObject var stateManager = StateManager.Get()
+
     var body: some View {
         List {
-            Text("My Profile").onTapGesture {
-                print("My Profile")
+            Text("Home").onTapGesture {
+                stateManager.rootView = "CATEGORY_LIST_VIEW"
+                stateManager.toggleMenu()
             }
-            Text("Posts").onTapGesture {
-                print("Posts")
+            Text("Set Data").onTapGesture {
+                stateManager.rootView = "SET_DATA_VIEW"
+                stateManager.toggleMenu()
             }
-            Text("Logout").onTapGesture {
-                print("Logout")
+            Section(header: Text("About")) {
+                Text("How it Works").onTapGesture {
+                    print("How it Works")
+                }
+                Text("Who is Cyrus?").onTapGesture {
+                    print("Who is Cyrus?")
+                }
             }
         }
     }
