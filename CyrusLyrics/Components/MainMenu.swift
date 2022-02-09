@@ -49,14 +49,18 @@ struct MenuContent: View {
 
     var body: some View {
         List {
-            Text("Home").onTapGesture {
+            Button(action: {
                 stateManager.rootView = "CATEGORY_LIST_VIEW"
                 stateManager.toggleMenu()
-            }
-            Text("Set Data").onTapGesture {
+            }, label: {
+                Text("Home")
+            })
+            Button(action: {
                 stateManager.rootView = "SET_DATA_VIEW"
                 stateManager.toggleMenu()
-            }
+            }, label: {
+                Text("Set Data")
+            })
             Section(header: Text("About")) {
                 Text("How it Works").onTapGesture {
                     print("How it Works")
