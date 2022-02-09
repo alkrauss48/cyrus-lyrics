@@ -12,6 +12,10 @@ struct CyrusLyricsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onOpenURL { url in
+                  // handle the URL that must be opened
+                    print("onOpenURL")
+                }
         }
     }
 }
