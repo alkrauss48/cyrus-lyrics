@@ -15,6 +15,7 @@ struct CyrusLyricsApp: App {
                 .onOpenURL { url in
                   // handle the URL that must be opened
                     print("onOpenURL")
+                    print(url)
                 }
         }
     }

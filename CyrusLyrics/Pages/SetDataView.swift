@@ -8,21 +8,27 @@
 import SwiftUI
 
 struct SetDataView: View {
+    @State private var selection: String?
     @StateObject var stateManager = StateManager.Get()
-
+    
+    let defaultSheets = [
+        "Demo Songs",
+        "Cyrus' Dad's Songs",
+    ]
+    
     var body: some View {
         NavigationView {
-            List {
-                Section(header: Text("Preloaded Data")) {
-                    Text("Demo Songs").onTapGesture {
-                        print("Home")
-                    }
-                    Text("Cyrus' Dad's Songs").onTapGesture {
-                        print("Home")
+            List(selection: $selection) {
+                Section(header: Text("Preloaded Lists")) {
+                    ForEach(defaultSheets, id: \.self) { sheet in
+                        Text(sheet)
                     }
                 }
-
-            }.navigationTitle("Set Data")
+                Section(header: Text("Your Lists")) {
+                    Link("Login", destination: URL(string: "https://api.cyruskrauss.com/oauth/google")!)
+                }
+           }
+            .navigationTitle("Set Data")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
@@ -33,6 +39,7 @@ struct SetDataView: View {
                 }
             }
         }
+        
     }
 }
 
