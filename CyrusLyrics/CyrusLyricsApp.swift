@@ -13,9 +13,13 @@ struct CyrusLyricsApp: App {
         WindowGroup {
             ContentView()
                 .onOpenURL { url in
-                  // handle the URL that must be opened
-                    print("onOpenURL")
-                    print(url)
+                    let stateManager = StateManager.Get()
+                    
+                    DispatchQueue.main.async {
+                        stateManager.rootView = StateManager.SET_DATA_VIEW
+                        stateManager.menuOpen = false
+                        stateManager.setOauthQuery(value: url.query!)
+                    }
                 }
         }
     }

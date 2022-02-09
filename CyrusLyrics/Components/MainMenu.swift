@@ -50,13 +50,13 @@ struct MenuContent: View {
     var body: some View {
         List {
             Button(action: {
-                stateManager.rootView = "CATEGORY_LIST_VIEW"
+                stateManager.rootView = StateManager.CATEGORY_LIST_VIEW
                 stateManager.toggleMenu()
             }, label: {
                 Text("Home")
             })
             Button(action: {
-                stateManager.rootView = "SET_DATA_VIEW"
+                stateManager.rootView = StateManager.SET_DATA_VIEW
                 stateManager.toggleMenu()
             }, label: {
                 Text("Set Data")

@@ -25,7 +25,11 @@ struct SetDataView: View {
                     }
                 }
                 Section(header: Text("Your Lists")) {
-                    Link("Login", destination: URL(string: "https://api.cyruskrauss.com/oauth/google")!)
+                    if (stateManager.oauthQuery.isEmpty) {
+                        Link("Login", destination: stateManager.authUrl())
+                    } else {
+                        Link("Create Sheet", destination: stateManager.createSheetUrl())
+                    }
                 }
            }
             .navigationTitle("Set Data")
