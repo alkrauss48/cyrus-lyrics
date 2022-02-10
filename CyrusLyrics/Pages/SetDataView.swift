@@ -28,7 +28,14 @@ struct SetDataView: View {
                     if (stateManager.oauthQuery.isEmpty) {
                         Link("Login", destination: stateManager.authUrl())
                     } else {
-                        Link("Create Sheet", destination: stateManager.createSheetUrl())
+                        Button(action: {
+                            stateManager.listSheets()
+                        }, label: {
+                            Text("Create Sheet")
+                        })
+                    }
+                    ForEach(stateManager.userFiles, id: \.self) { file in
+                        Text(file.name)
                     }
                 }
            }
