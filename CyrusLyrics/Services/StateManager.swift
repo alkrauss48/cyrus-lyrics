@@ -46,14 +46,23 @@ class StateManager: ObservableObject {
         return URL(string: "https://api.cyruskrauss.com/sheets/new?" + self.oauthQuery + "&title=" + title)!
     }
     
-    func listSheetsUrl() -> URL {
-        return URL(string: "https://api.cyruskrauss.com/sheets?" + self.oauthQuery)!
+    func listSheets() -> Void {
+        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets?" + self.oauthQuery)!
+        
+        self.makeRequest(url: requestUrl) { data in
+            do {
+                let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
+                DispatchQueue.main.async {
+                    self.userFiles = result.files
+                }
+            } catch let responseError {
+                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+            }
+        }
     }
     
-    func listSheets() -> Void {
-        let requestUrl = self.listSheetsUrl()
-        
-        let request = URLRequest(url: requestUrl)
+    private func makeRequest(url: URL, callback: @escaping (Data) -> ()) {
+        let request = URLRequest(url: url)
         
         // Create the session object
         let session = URLSession.shared
@@ -68,21 +77,8 @@ class StateManager: ObservableObject {
                 print("server data error")
                 return
             }
-            do {
-//                if let requestJson = try JSONSerialization.jsonObject(with: serverData, options: .mutableContainers) as? [String: Any]{
-//                    print("Response: \(requestJson)")
-//                } else {
-//                    print("failed")
-//                }
-                let result = try JSONDecoder().decode(APIListFilesResponse.self, from: serverData)
-                DispatchQueue.main.async {
-                    self.userFiles = result.files
-                }
-            } catch let responseError {
-                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
-                let message = String(bytes: serverData, encoding: .ascii)
-                print(message as Any)
-            }
+            
+            callback(serverData)
         }
 
         // Run the task
