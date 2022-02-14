@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIFile : Decodable, Hashable {
+struct APIFile : Hashable, Codable {
     var id: String
     var name: String
 }

@@ -13,6 +13,8 @@ class StateManager: ObservableObject {
     @Published var rootView: String = StateManager.CATEGORY_LIST_VIEW;
     @Published var oauthQuery: String = "";
     @Published var userFiles: [APIFile] = [];
+    @Published var defaultFiles: [APIFile] = [];
+
     
     static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
     static var SET_DATA_VIEW = "SET_DATA_VIEW"
@@ -27,6 +29,23 @@ class StateManager: ObservableObject {
         if let value = UserDefaults.standard.string(forKey: "oauthQuery") {
             self.oauthQuery = value
         }
+        
+        // Load up the default files
+        if let defaultFiles = deserializeStoredValueAs(key: "defaultFiles", type: [APIFile].self) {
+            self.defaultFiles = defaultFiles
+        } else {
+            listDefaultSheets()
+        }
+    }
+    
+    private func deserializeStoredValueAs<T: Decodable>(key: String, type: T.Type) -> T? {
+        if let data = UserDefaults.standard.value(forKey: key) as? Data {
+            let decodedValue = try? PropertyListDecoder().decode(type, from: data)
+
+            return decodedValue
+        }
+        
+        return nil;
     }
     
     func setOauthQuery(value: String) {
@@ -38,6 +57,10 @@ class StateManager: ObservableObject {
         self.menuOpen.toggle()
     }
     
+    func isLoggedIn() -> Bool {
+        return !self.oauthQuery.isEmpty
+    }
+    
     func authUrl() -> URL {
         return URL(string: "https://api.cyruskrauss.com/oauth/google")!
     }
@@ -46,15 +69,32 @@ class StateManager: ObservableObject {
         return URL(string: "https://api.cyruskrauss.com/sheets/new?" + self.oauthQuery + "&title=" + title)!
     }
     
-    func listSheets() -> Void {
+    func listUserSheets() -> Void {
         let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets?" + self.oauthQuery)!
         
-        self.makeRequest(url: requestUrl) { data in
+        makeRequest(url: requestUrl) { data in
             do {
                 let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
                 DispatchQueue.main.async {
                     self.userFiles = result.files
                 }
+            } catch let responseError {
+                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+            }
+        }
+    }
+    
+    func listDefaultSheets() -> Void {
+        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets/default")!
+        
+        makeRequest(url: requestUrl) { data in
+            do {
+                let result = try JSONDecoder().decode([APIFile].self, from: data)
+                DispatchQueue.main.async {
+                    self.defaultFiles = result
+                }
+                
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(result), forKey:"defaultFiles")
             } catch let responseError {
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }

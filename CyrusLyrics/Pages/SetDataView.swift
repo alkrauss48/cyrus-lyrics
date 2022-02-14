@@ -20,16 +20,16 @@ struct SetDataView: View {
         NavigationView {
             List(selection: $selection) {
                 Section(header: Text("Preloaded Lists")) {
-                    ForEach(defaultSheets, id: \.self) { sheet in
-                        Text(sheet)
+                    ForEach(stateManager.defaultFiles, id: \.self) { file in
+                        Text(file.name)
                     }
                 }
                 Section(header: Text("Your Lists")) {
-                    if (stateManager.oauthQuery.isEmpty) {
+                    if (!stateManager.isLoggedIn()) {
                         Link("Login", destination: stateManager.authUrl())
                     } else {
                         Button(action: {
-                            stateManager.listSheets()
+                            stateManager.listUserSheets()
                         }, label: {
                             Text("Create Sheet")
                         })
