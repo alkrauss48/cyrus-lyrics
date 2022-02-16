@@ -14,7 +14,8 @@ class StateManager: ObservableObject {
     @Published var oauthQuery: String = "";
     @Published var userFiles: [APIFile] = [];
     @Published var defaultFiles: [APIFile] = [];
-
+    @Published var categories = [AppCategory]()
+    var dataAdapter = SheetsV2Adapter()
     
     static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
     static var SET_DATA_VIEW = "SET_DATA_VIEW"
@@ -36,16 +37,13 @@ class StateManager: ObservableObject {
         } else {
             listDefaultSheets()
         }
-    }
-    
-    private func deserializeStoredValueAs<T: Decodable>(key: String, type: T.Type) -> T? {
-        if let data = UserDefaults.standard.value(forKey: key) as? Data {
-            let decodedValue = try? PropertyListDecoder().decode(type, from: data)
-
-            return decodedValue
-        }
         
-        return nil;
+        // Load up app categories
+        if let categories = deserializeStoredValueAs(key: "categories", type: [AppCategory].self) {
+            setCategories(newCategories: categories)
+        } else {
+            queryAppData()
+        }
     }
     
     func setOauthQuery(value: String) {
@@ -99,6 +97,47 @@ class StateManager: ObservableObject {
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
         }
+    }
+  
+    func setCategories(newCategories: [AppCategory]) {
+        // Publish the categories so the main thread and view will trigger UI updates
+        DispatchQueue.main.async {
+            self.categories = newCategories
+        }
+    }
+
+    func queryAppData() -> Void {
+        let requestUrl = URL(string: dataAdapter.dataUrl)!
+        
+        makeRequest(url: requestUrl) { data in
+            // Convert HTTP Response Data to a simple String
+            if let dataString = String(data: data, encoding: .utf8) {
+                print("Response data string:\n \(dataString)")
+                self.parseAppData(data: dataString)
+            }
+        }
+    }
+    
+    func parseAppData(data: String!) {
+        var tempCategories = dataAdapter.parseCategories(data: data)
+        
+        // Sort the categories by name
+        tempCategories.sort { $0.name < $1.name }
+        
+        setCategories(newCategories: tempCategories)
+        
+        // Save the categories in UserDefaults
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(tempCategories), forKey:"categories")
+    }
+    
+    private func deserializeStoredValueAs<T: Decodable>(key: String, type: T.Type) -> T? {
+        if let data = UserDefaults.standard.value(forKey: key) as? Data {
+            let decodedValue = try? PropertyListDecoder().decode(type, from: data)
+
+            return decodedValue
+        }
+        
+        return nil;
     }
     
     private func makeRequest(url: URL, callback: @escaping (Data) -> ()) {

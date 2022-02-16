@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct CategoryList: View {
-    @StateObject var dataManager = DataManager()
     @StateObject var stateManager = StateManager.Get()
+    // @StateObject var foo = DataManager()
 
     var body: some View {
         NavigationView {
-            List(dataManager.categories, id: \.id) { category in
+            List(stateManager.categories, id: \.id) { category in
                 NavigationLink(destination: CategoryDetailView(category: category)) {
                     Text(category.name)
                 }
             }.refreshable {
-                dataManager.queryAppData()
+                stateManager.queryAppData()
             }
             .navigationTitle("Categories")
             .toolbar {
