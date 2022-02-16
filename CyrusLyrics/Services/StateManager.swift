@@ -62,7 +62,7 @@ class StateManager: ObservableObject {
         DispatchQueue.main.async {
             self.activeFile = file
             
-            // queryAppData()
+            self.queryAppData()
         }
         
         UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
@@ -109,10 +109,8 @@ class StateManager: ObservableObject {
                 DispatchQueue.main.async {
                     self.defaultFiles = result
                     
-                    if (self.activeFile == nil) {
-                        self.activeFile = result.first
-                        
-                        UserDefaults.standard.set(try? PropertyListEncoder().encode(result.first), forKey:"activeFile")
+                    if (self.activeFile == nil && !result.isEmpty) {
+                        self.setActiveFile(file: result.first!)
                     }
                 }
                 
@@ -131,7 +129,11 @@ class StateManager: ObservableObject {
     }
 
     func queryAppData() -> Void {
-        let requestUrl = URL(string: dataAdapter.dataUrl)!
+        guard let file = self.activeFile else {
+            return
+        }
+        
+        let requestUrl = URL(string: dataAdapter.getDataUrl(sheetId: file.id))!
         
         makeRequest(url: requestUrl) { data in
             // Convert HTTP Response Data to a simple String

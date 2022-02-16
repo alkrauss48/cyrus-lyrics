@@ -13,7 +13,10 @@
 import Foundation
 
 class SheetsV2Adapter: SheetsAdapter {
-    var dataUrl = "https://docs.google.com/spreadsheets/d/1JfkF-N492ygBLMcHQhXUFl-MtlMGQz35Vco4caiVw9c/gviz/tq?tqx=out:json"
+    
+    func getDataUrl(sheetId: String) -> String {
+        return "https://docs.google.com/spreadsheets/d/" + sheetId + "/gviz/tq?tqx=out:json"
+    }
     
     func parseCategories(data: String!) -> [AppCategory] {
         let responseData = data.data(using: .utf8)!
