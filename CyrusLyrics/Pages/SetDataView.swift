@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SetDataView: View {
-    @State private var selection: String?
     @StateObject var stateManager = StateManager.Get()
     
     let defaultSheets = [
@@ -18,10 +17,22 @@ struct SetDataView: View {
     
     var body: some View {
         NavigationView {
-            List(selection: $selection) {
+            List() {
                 Section(header: Text("Preloaded Lists")) {
                     ForEach(stateManager.defaultFiles, id: \.self) { file in
-                        Text(file.name)
+                        Button(action: {
+                            stateManager.setActiveFile(file: file)
+                        }, label: {
+                            if (stateManager.activeFile == file) {
+                                HStack {
+                                    Text(file.name)
+                                    Spacer()
+                                    Image(systemName: "checkmark")
+                                }
+                            } else {
+                                Text(file.name)
+                            }
+                        })
                     }
                 }
                 Section(header: Text("Your Lists")) {

@@ -10,11 +10,12 @@ import SwiftUI
 
 class StateManager: ObservableObject {
     @Published var menuOpen: Bool = false
-    @Published var rootView: String = StateManager.CATEGORY_LIST_VIEW;
-    @Published var oauthQuery: String = "";
-    @Published var userFiles: [APIFile] = [];
-    @Published var defaultFiles: [APIFile] = [];
+    @Published var rootView: String = StateManager.CATEGORY_LIST_VIEW
+    @Published var oauthQuery: String = ""
+    @Published var userFiles: [APIFile] = []
+    @Published var defaultFiles: [APIFile] = []
     @Published var categories = [AppCategory]()
+    @Published var activeFile: APIFile?
     var dataAdapter = SheetsV2Adapter()
     
     static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
@@ -38,6 +39,12 @@ class StateManager: ObservableObject {
             listDefaultSheets()
         }
         
+        if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
+            DispatchQueue.main.async {
+                self.activeFile = storedActiveFile
+            }
+        }
+        
         // Load up app categories
         if let categories = deserializeStoredValueAs(key: "categories", type: [AppCategory].self) {
             setCategories(newCategories: categories)
@@ -49,6 +56,16 @@ class StateManager: ObservableObject {
     func setOauthQuery(value: String) {
         self.oauthQuery = value
         UserDefaults.standard.set(value, forKey: "oauthQuery")
+    }
+    
+    func setActiveFile(file: APIFile) -> Void {
+        DispatchQueue.main.async {
+            self.activeFile = file
+            
+            // queryAppData()
+        }
+        
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
     }
     
     func toggleMenu() {
@@ -88,8 +105,15 @@ class StateManager: ObservableObject {
         makeRequest(url: requestUrl) { data in
             do {
                 let result = try JSONDecoder().decode([APIFile].self, from: data)
+                
                 DispatchQueue.main.async {
                     self.defaultFiles = result
+                    
+                    if (self.activeFile == nil) {
+                        self.activeFile = result.first
+                        
+                        UserDefaults.standard.set(try? PropertyListEncoder().encode(result.first), forKey:"activeFile")
+                    }
                 }
                 
                 UserDefaults.standard.set(try? PropertyListEncoder().encode(result), forKey:"defaultFiles")
