@@ -68,6 +68,20 @@ class StateManager: ObservableObject {
         UserDefaults.standard.set(value, forKey: "oauthQuery")
     }
     
+    func logOut() -> Void {
+        DispatchQueue.main.async {
+            if ((self.activeFile != nil) && self.userFiles.contains(self.activeFile!)) {
+                self.setActiveFile(file: self.defaultFiles[0])
+            }
+            
+            self.oauthQuery = ""
+            self.userFiles = []
+        }
+        
+        UserDefaults.standard.removeObject(forKey: "userFiles")
+        UserDefaults.standard.removeObject(forKey: "oauthQuery")
+    }
+    
     func setActiveFile(file: APIFile) -> Void {
         DispatchQueue.main.async {
             self.activeFile = file

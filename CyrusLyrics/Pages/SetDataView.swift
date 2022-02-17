@@ -60,6 +60,11 @@ struct SetDataView: View {
                         }, label: {
                             Text("Create Sheet")
                         })
+                        Button(action: {
+                            self.stateManager.logOut()
+                        }, label: {
+                            Text("Log out")
+                        })
                     }
                 }
            }
