@@ -37,7 +37,7 @@ struct SetDataView: View {
                     Section(header: Text("Your Lists")) {
                         ForEach(stateManager.userFiles, id: \.self) { file in
                             Button(action: {
-                                stateManager.setActiveFile(file: file)
+                                stateManager.setActiveFile(file: file, isUserFile: true)
                             }, label: {
                                 if (stateManager.activeFile == file) {
                                     HStack {

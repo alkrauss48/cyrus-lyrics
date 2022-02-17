@@ -30,6 +30,7 @@
 		DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */; };
 		DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F102684AB1700AF67CE /* LyricsView.swift */; };
 		DD9D4F132684ABD400AF67CE /* ToolbarItemHack.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F122684ABD400AF67CE /* ToolbarItemHack.swift */; };
+		DDCAF73A27BE115C00C7C24C /* OAuthSheetAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCAF73927BE115C00C7C24C /* OAuthSheetAdapter.swift */; };
 		DDCB2A892791FC3B0067617A /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCB2A882791FC3B0067617A /* MainMenu.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleToolbarItem.swift; sourceTree = "<group>"; };
 		DD9D4F102684AB1700AF67CE /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
 		DD9D4F122684ABD400AF67CE /* ToolbarItemHack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarItemHack.swift; sourceTree = "<group>"; };
+		DDCAF73927BE115C00C7C24C /* OAuthSheetAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthSheetAdapter.swift; sourceTree = "<group>"; };
 		DDCB2A882791FC3B0067617A /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,6 +80,7 @@
 			children = (
 				DD01D8BA26E7838500A657F8 /* SheetsV1Adapter.swift */,
 				DD01D8C026E7854400A657F8 /* SheetsV2Adapter.swift */,
+				DDCAF73927BE115C00C7C24C /* OAuthSheetAdapter.swift */,
 			);
 			path = DataAdapters;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
 				DD109A3427B557B70079F61D /* APIResponseStructs.swift in Sources */,
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
+				DDCAF73A27BE115C00C7C24C /* OAuthSheetAdapter.swift in Sources */,
 				DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */,
 				DD01D8BF26E7846500A657F8 /* getDefaultGoogleUrl.swift in Sources */,
 				DD01D8C426E789A800A657F8 /* SheetsAdapter.swift in Sources */,

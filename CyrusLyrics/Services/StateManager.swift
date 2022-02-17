@@ -16,7 +16,9 @@ class StateManager: ObservableObject {
     @Published var defaultFiles: [APIFile] = []
     @Published var categories = [AppCategory]()
     @Published var activeFile: APIFile?
+    
     var dataAdapter = SheetsV2Adapter()
+    var oauthDataAdapter = OAuthSheetAdapter()
     
     static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
     static var SET_DATA_VIEW = "SET_DATA_VIEW"
@@ -82,11 +84,15 @@ class StateManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "oauthQuery")
     }
     
-    func setActiveFile(file: APIFile) -> Void {
+    func setActiveFile(file: APIFile, isUserFile: Bool = false) -> Void {
         DispatchQueue.main.async {
             self.activeFile = file
             
-            self.queryAppData()
+            if (isUserFile) {
+                
+            } else {
+                self.queryAppData()
+            }
         }
         
         UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
@@ -158,6 +164,33 @@ class StateManager: ObservableObject {
                 
                 UserDefaults.standard.set(try? PropertyListEncoder().encode(result), forKey:"defaultFiles")
             } catch let responseError {
+                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+            }
+        }
+    }
+    
+    func getActiveSheetData() -> Void {
+        guard let activeSheet = self.activeFile else {
+            return
+        }
+                
+        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets/\(activeSheet.id)?" + self.oauthQuery)!
+        
+        // TODO: Update this route
+        makeRequest(url: requestUrl) { data in
+            do {
+                let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
+                DispatchQueue.main.async {
+                    self.userFiles = result.files
+                }
+                
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
+            } catch let responseError {
+                DispatchQueue.main.async {
+                    self.userFiles = []
+                }
+                
+                UserDefaults.standard.removeObject(forKey: "userFiles")
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
         }
