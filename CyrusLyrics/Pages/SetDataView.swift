@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SetDataView: View {
     @StateObject var stateManager = StateManager.Get()
+    @State private var showCreateActionSheet = false
     
     var body: some View {
         NavigationView {
@@ -55,7 +56,7 @@ struct SetDataView: View {
                         Link("Login", destination: stateManager.authUrl())
                     } else {
                         Button(action: {
-                            stateManager.createSheetUrl(title: "cool sheet")
+                            self.showCreateActionSheet.toggle()
                         }, label: {
                             Text("Create Sheet")
                         })
@@ -77,7 +78,38 @@ struct SetDataView: View {
                 }
             }
         }
+        .sheet(isPresented: $showCreateActionSheet) {
+            SheetView()
+        }
         
+    }
+}
+
+struct SheetView: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject var stateManager = StateManager.Get()
+    @State var sheetName: String = "My CyrusLyrics Songs"
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                TextField("Sheet Name", text: $sheetName)
+                Section {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Text("Cancel")
+                    }
+                    Button(action: {
+                        stateManager.createSheetUrl(title: self.sheetName)
+                        dismiss()
+                    }) {
+                        Text("Submit")
+                    }
+                }
+            }
+            .navigationBarTitle("Create Sheet")
+        }
     }
 }
 
