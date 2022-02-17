@@ -10,46 +10,62 @@ import SwiftUI
 struct SetDataView: View {
     @StateObject var stateManager = StateManager.Get()
     
-    let defaultSheets = [
-        "Demo Songs",
-        "Cyrus' Dad's Songs",
-    ]
-    
     var body: some View {
         NavigationView {
-            List() {
-                Section(header: Text("Preloaded Lists")) {
-                    ForEach(stateManager.defaultFiles, id: \.self) { file in
-                        Button(action: {
-                            stateManager.setActiveFile(file: file)
-                        }, label: {
-                            if (stateManager.activeFile == file) {
-                                HStack {
+            List {
+                if (stateManager.defaultFiles.count > 0) {
+                    Section(header: Text("Preloaded Lists")) {
+                        ForEach(stateManager.defaultFiles, id: \.self) { file in
+                            Button(action: {
+                                stateManager.setActiveFile(file: file)
+                            }, label: {
+                                if (stateManager.activeFile == file) {
+                                    HStack {
+                                        Text(file.name)
+                                        Spacer()
+                                        Image(systemName: "checkmark")
+                                    }
+                                } else {
                                     Text(file.name)
-                                    Spacer()
-                                    Image(systemName: "checkmark")
                                 }
-                            } else {
-                                Text(file.name)
-                            }
-                        })
+                            })
+                        }
                     }
                 }
-                Section(header: Text("Your Lists")) {
+                if (stateManager.userFiles.count > 0) {
+                    Section(header: Text("Your Lists")) {
+                        ForEach(stateManager.userFiles, id: \.self) { file in
+                            Button(action: {
+                                stateManager.setActiveFile(file: file)
+                            }, label: {
+                                if (stateManager.activeFile == file) {
+                                    HStack {
+                                        Text(file.name)
+                                        Spacer()
+                                        Image(systemName: "checkmark")
+                                    }
+                                } else {
+                                    Text(file.name)
+                                }
+                            })                    }
+                    }
+                }
+                Section(header: Text("Actions")) {
                     if (!stateManager.isLoggedIn()) {
                         Link("Login", destination: stateManager.authUrl())
                     } else {
                         Button(action: {
-                            stateManager.listUserSheets()
+                            stateManager.createSheetUrl(title: "cool sheet")
                         }, label: {
                             Text("Create Sheet")
                         })
                     }
-                    ForEach(stateManager.userFiles, id: \.self) { file in
-                        Text(file.name)
-                    }
                 }
            }
+            .refreshable {
+                stateManager.listDefaultSheets()
+                stateManager.listUserSheets()
+            }
             .navigationTitle("Set Data")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {

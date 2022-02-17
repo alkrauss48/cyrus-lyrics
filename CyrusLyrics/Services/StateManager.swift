@@ -39,6 +39,16 @@ class StateManager: ObservableObject {
             listDefaultSheets()
         }
         
+        // Load up the user's files, if logged in
+        if (self.isLoggedIn()) {
+            if let userFiles = deserializeStoredValueAs(key: "userFiles", type: [APIFile].self) {
+                self.userFiles = userFiles
+            } else {
+                listUserSheets()
+            }
+        }
+        
+        // Load up the active file
         if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
             DispatchQueue.main.async {
                 self.activeFile = storedActiveFile
@@ -80,8 +90,19 @@ class StateManager: ObservableObject {
         return URL(string: "https://api.cyruskrauss.com/oauth/google")!
     }
     
-    func createSheetUrl(title: String) -> URL {
-        return URL(string: "https://api.cyruskrauss.com/sheets/new?" + self.oauthQuery + "&title=" + title)!
+    func createSheetUrl(title: String) -> Void {
+        let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
+        
+        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets/new?title=\(encodedTitle!)&" + self.oauthQuery)
+        
+        guard let fullRequestUrl = requestUrl else {
+            return
+        }
+        
+        makeRequest(url: fullRequestUrl) { data in
+            // Reload the user's sheets
+            self.listUserSheets()
+        }
     }
     
     func listUserSheets() -> Void {
@@ -93,7 +114,14 @@ class StateManager: ObservableObject {
                 DispatchQueue.main.async {
                     self.userFiles = result.files
                 }
+                
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
             } catch let responseError {
+                DispatchQueue.main.async {
+                    self.userFiles = []
+                }
+                
+                UserDefaults.standard.removeObject(forKey: "userFiles")
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
         }
@@ -173,7 +201,7 @@ class StateManager: ObservableObject {
         let session = URLSession.shared
         
         // Create a task using the session object, to run and return completion handler
-        let webTask = session.dataTask(with: request) {data, response, error in
+        let webTask = session.dataTask(with: request) {data, response, error in            
             guard error == nil else {
                 print(error?.localizedDescription ?? "Response Error")
                 return
