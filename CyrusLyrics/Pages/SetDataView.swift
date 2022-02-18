@@ -58,7 +58,15 @@ struct SetDataView: View {
                         Button(action: {
                             self.showCreateActionSheet.toggle()
                         }, label: {
-                            Text("Create Sheet")
+                            if (stateManager.isCreatingSheet) {
+                                HStack {
+                                    Text("Create Sheet")
+                                    Spacer()
+                                    ProgressView()
+                                }
+                            } else {
+                                Text("Create Sheet")
+                            }
                         })
                         Button(action: {
                             self.stateManager.logOut()

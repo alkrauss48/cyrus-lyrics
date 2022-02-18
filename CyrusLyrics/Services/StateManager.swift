@@ -16,6 +16,7 @@ class StateManager: ObservableObject {
     @Published var defaultFiles: [APIFile] = []
     @Published var categories = [AppCategory]()
     @Published var activeFile: APIFile?
+    @Published var isCreatingSheet: Bool = false
     
     var dataAdapter = SheetsV2Adapter()
     var oauthDataAdapter = OAuthSheetAdapter()
@@ -144,6 +145,7 @@ class StateManager: ObservableObject {
             return
         }
         
+        self.isCreatingSheet = true
         makeRequest(url: fullRequestUrl) { data in
             // Reload the user's sheets
             self.listUserSheets()
@@ -169,6 +171,8 @@ class StateManager: ObservableObject {
                 UserDefaults.standard.removeObject(forKey: "userFiles")
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
+            
+            self.isCreatingSheet = false
         }
     }
     
