@@ -10,14 +10,11 @@ import SwiftUI
 struct ShuffleToolbarItem: ToolbarContent {
     let type: String?
     let id: UUID?
-    @StateObject var stateManager = StateManager.Get()
     
     var body: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
-            if (!stateManager.categories.isEmpty) {
-                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: type, shuffleId: id)) {
-                    Image(systemName: "shuffle")
-                }
+            NavigationLink(destination: LinkDetailView(link: nil, shuffleType: type, shuffleId: id)) {
+                Image(systemName: "shuffle")
             }
         }
     }
