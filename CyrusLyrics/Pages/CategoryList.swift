@@ -26,9 +26,7 @@ struct CategoryList: View {
                 }
             }
             .refreshable {
-                if (!stateManager.categories.isEmpty) {
-                    stateManager.refreshList()
-                }
+                stateManager.refreshList()
             }
             .navigationTitle("Categories")
             .toolbar {
@@ -39,7 +37,7 @@ struct CategoryList: View {
                         Image(systemName: "line.horizontal.3")
                     }
                 }
-                ShuffleToolbarItem(type: "all", id: nil)
+                ShuffleToolbarItem(type: "all", id: nil, isHidden: stateManager.categories.isEmpty)
             }
         }
     }
