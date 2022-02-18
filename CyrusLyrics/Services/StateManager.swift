@@ -89,13 +89,25 @@ class StateManager: ObservableObject {
             self.activeFile = file
             
             if (isUserFile) {
-                
+                self.getActiveSheetData()
             } else {
                 self.queryAppData()
             }
         }
         
         UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
+    }
+    
+    func refreshData() {
+        guard let activeFile = self.activeFile else {
+            return
+        }
+        
+//        if (self.isUserFile) {
+//            self.getActiveSheetData()
+//        } else {
+//            self.queryAppData()
+//        }
     }
     
     func toggleMenu() {
@@ -179,18 +191,10 @@ class StateManager: ObservableObject {
         // TODO: Update this route
         makeRequest(url: requestUrl) { data in
             do {
-                let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
-                DispatchQueue.main.async {
-                    self.userFiles = result.files
-                }
-                
-                UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
+                let result = try JSONDecoder().decode(APIGetSheetResponse.self, from: data)
+                let categories = self.oauthDataAdapter.processData(rows: result.values)
+                self.parseAppData(categories: categories)
             } catch let responseError {
-                DispatchQueue.main.async {
-                    self.userFiles = []
-                }
-                
-                UserDefaults.standard.removeObject(forKey: "userFiles")
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
         }
@@ -214,21 +218,21 @@ class StateManager: ObservableObject {
             // Convert HTTP Response Data to a simple String
             if let dataString = String(data: data, encoding: .utf8) {
                 print("Response data string:\n \(dataString)")
-                self.parseAppData(data: dataString)
+                let categories = self.dataAdapter.parseCategories(data: dataString)
+                self.parseAppData(categories: categories)
             }
         }
     }
     
-    func parseAppData(data: String!) {
-        var tempCategories = dataAdapter.parseCategories(data: data)
-        
+    func parseAppData(categories: [AppCategory]) {
+
         // Sort the categories by name
-        tempCategories.sort { $0.name < $1.name }
+        let sortedCategories = categories.sorted { $0.name < $1.name }
         
-        setCategories(newCategories: tempCategories)
+        setCategories(newCategories: sortedCategories)
         
         // Save the categories in UserDefaults
-        UserDefaults.standard.set(try? PropertyListEncoder().encode(tempCategories), forKey:"categories")
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(sortedCategories), forKey:"categories")
     }
     
     private func deserializeStoredValueAs<T: Decodable>(key: String, type: T.Type) -> T? {

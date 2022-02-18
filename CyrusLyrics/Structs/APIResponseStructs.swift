@@ -15,3 +15,9 @@ struct APIFile : Hashable, Codable {
 struct APIListFilesResponse : Decodable, Hashable {
     var files: [APIFile]
 }
+
+struct APIGetSheetResponse : Decodable, Hashable {
+    var majorDimension: String
+    var range: String
+    var values: [[String]]
+}

@@ -13,12 +13,23 @@ struct CategoryList: View {
 
     var body: some View {
         NavigationView {
-            List(stateManager.categories, id: \.id) { category in
-                NavigationLink(destination: CategoryDetailView(category: category)) {
-                    Text(category.name)
+            VStack {
+                if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
+                    List {
+                        Text("No categories to show. Go log in to your Google account and add some to the '" + stateManager.activeFile!.name + "' Google Sheet document!" )
+                    }
+                } else {
+                    List(stateManager.categories, id: \.id) { category in
+                        NavigationLink(destination: CategoryDetailView(category: category)) {
+                            Text(category.name)
+                        }
+                    }
                 }
-            }.refreshable {
-                stateManager.queryAppData()
+            }
+            .refreshable {
+                if (!stateManager.categories.isEmpty) {
+                    stateManager.refreshData()
+                }
             }
             .navigationTitle("Categories")
             .toolbar {

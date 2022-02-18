@@ -8,23 +8,7 @@
 import Foundation
 
 class OAuthSheetAdapter {
-    func parseCategories(data: String!) -> [AppCategory] {
-        let responseData = data.data(using: .utf8)!
-        
-        let start = responseData.index(responseData.startIndex, offsetBy: 47)
-        let end = responseData.index(responseData.endIndex, offsetBy: -2)
-        let range = start..<end
-
-        let jsonData = responseData[range]
-        
-        let gSheet: GoogleSheetNewFormat = try! JSONDecoder().decode(GoogleSheetNewFormat.self, from: jsonData)
-
-        let rows = gSheet.table.rows.map { $0.c }
-
-        return self.processData(rows: rows)
-    }
-
-    private func processData(rows: [[GoogleSheetNewCell?]]) -> [AppCategory] {
+    public func processData(rows: [[String]]) -> [AppCategory] {
         var categories = [AppCategory]()
         
         for (rowIndex, row) in rows.enumerated() {
@@ -37,12 +21,12 @@ class OAuthSheetAdapter {
                 continue
             }
 
-            guard let categoryCell = row[0]?.data else { continue }
-            guard let subCategoryCell = row[1]?.data else { continue }
-            guard let linkNameCell = row[2]?.data else { continue }
-            let linkUrlCell = row[3]?.data
-            let linkLyricsCell = row[4]?.data
-            let linkSpotifyCell = row[5]?.data
+            let categoryCell = row[0]
+            let subCategoryCell = row[1]
+            let linkNameCell = row[2]
+            let linkUrlCell = row.count >= 4 ? row[3] : nil
+            let linkLyricsCell = row.count >= 5 ? row[4] : nil
+            let linkSpotifyCell = row.count >= 6 ? row[5] : nil
 
             // Process the row's category
             var categoryIndex: Int
