@@ -98,16 +98,28 @@ class StateManager: ObservableObject {
         UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
     }
     
-    func refreshData() {
-        guard let activeFile = self.activeFile else {
+    func refreshList() {
+        if (self.activeFile == nil) {
             return
         }
         
-//        if (self.isUserFile) {
-//            self.getActiveSheetData()
-//        } else {
-//            self.queryAppData()
-//        }
+        if (self.isUserFile()) {
+            self.getActiveSheetData()
+        } else {
+            self.queryAppData()
+        }
+    }
+    
+    func isUserFile() -> Bool {
+        guard let activeFile = self.activeFile else {
+            return false
+        }
+        
+        if (self.defaultFiles.contains(activeFile)) {
+            return false
+        }
+        
+        return true
     }
     
     func toggleMenu() {

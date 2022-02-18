@@ -9,14 +9,13 @@ import SwiftUI
 
 struct CategoryList: View {
     @StateObject var stateManager = StateManager.Get()
-    // @StateObject var foo = DataManager()
 
     var body: some View {
         NavigationView {
             VStack {
                 if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
                     List {
-                        Text("No categories to show. Go log in to your Google account and add some to the '" + stateManager.activeFile!.name + "' Google Sheet document!" )
+                        Text("No categories to show. Go log in to your Google Docs account and add some songs to the '" + stateManager.activeFile!.name + "' Google Sheet document!" )
                     }
                 } else {
                     List(stateManager.categories, id: \.id) { category in
@@ -28,7 +27,7 @@ struct CategoryList: View {
             }
             .refreshable {
                 if (!stateManager.categories.isEmpty) {
-                    stateManager.refreshData()
+                    stateManager.refreshList()
                 }
             }
             .navigationTitle("Categories")
