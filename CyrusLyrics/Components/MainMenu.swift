@@ -62,12 +62,12 @@ struct MenuContent: View {
                 Text("Set Data")
             })
             Section(header: Text("About")) {
-                Text("How it Works").onTapGesture {
-                    print("How it Works")
-                }
-                Text("Who is Cyrus?").onTapGesture {
-                    print("Who is Cyrus?")
-                }
+                Button(action: {
+                    stateManager.rootView = StateManager.HOW_IT_WORKS_VIEW
+                    stateManager.toggleMenu()
+                }, label: {
+                    Text("How It Works")
+                })
             }
         }
     }

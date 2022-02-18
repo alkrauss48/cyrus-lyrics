@@ -14,6 +14,8 @@ struct ContentView: View {
         ZStack {
             if(stateManager.rootView == "SET_DATA_VIEW") {
                 SetDataView()
+            } else if (stateManager.rootView == "HOW_IT_WORKS_VIEW") {
+                HowItWorksView()
             } else {
                 CategoryList()
             }

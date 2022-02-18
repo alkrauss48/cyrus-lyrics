@@ -22,7 +22,8 @@ class StateManager: ObservableObject {
     
     static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
     static var SET_DATA_VIEW = "SET_DATA_VIEW"
-    
+    static var HOW_IT_WORKS_VIEW = "HOW_IT_WORKS_VIEW"
+
     static var stateManager = StateManager()
     
     static func Get() -> StateManager {

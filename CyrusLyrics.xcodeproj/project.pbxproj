@@ -26,6 +26,8 @@
 		DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A6267D08F60024D448 /* AppDataStructs.swift */; };
 		DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1AB267D31870024D448 /* CategoryDetailView.swift */; };
 		DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */; };
+		DD70B38827C006CF0092F915 /* HowItWorksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD70B38727C006CF0092F915 /* HowItWorksView.swift */; };
+		DD70B38A27C0076C0092F915 /* FAQStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD70B38927C0076C0092F915 /* FAQStructs.swift */; };
 		DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */; };
 		DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */; };
 		DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F102684AB1700AF67CE /* LyricsView.swift */; };
@@ -56,6 +58,8 @@
 		DD50F1A6267D08F60024D448 /* AppDataStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataStructs.swift; sourceTree = "<group>"; };
 		DD50F1AB267D31870024D448 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
 		DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCategoryDetailView.swift; sourceTree = "<group>"; };
+		DD70B38727C006CF0092F915 /* HowItWorksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowItWorksView.swift; sourceTree = "<group>"; };
+		DD70B38927C0076C0092F915 /* FAQStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQStructs.swift; sourceTree = "<group>"; };
 		DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleManager.swift; sourceTree = "<group>"; };
 		DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleToolbarItem.swift; sourceTree = "<group>"; };
 		DD9D4F102684AB1700AF67CE /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
@@ -148,6 +152,7 @@
 				DD50F1A1267D08E00024D448 /* GSheetStructs.swift */,
 				DD50F1A6267D08F60024D448 /* AppDataStructs.swift */,
 				DD109A3327B557B70079F61D /* APIResponseStructs.swift */,
+				DD70B38927C0076C0092F915 /* FAQStructs.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -171,6 +176,7 @@
 				DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */,
 				DD109A2D27B1DA890079F61D /* CategoryList.swift */,
 				DD109A3127B22E2E0079F61D /* SetDataView.swift */,
+				DD70B38727C006CF0092F915 /* HowItWorksView.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -267,8 +273,10 @@
 				DD109A2E27B1DA8A0079F61D /* CategoryList.swift in Sources */,
 				DDCB2A892791FC3B0067617A /* MainMenu.swift in Sources */,
 				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
+				DD70B38A27C0076C0092F915 /* FAQStructs.swift in Sources */,
 				DD109A3427B557B70079F61D /* APIResponseStructs.swift in Sources */,
 				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
+				DD70B38827C006CF0092F915 /* HowItWorksView.swift in Sources */,
 				DDCAF73A27BE115C00C7C24C /* OAuthSheetAdapter.swift in Sources */,
 				DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */,
 				DD01D8BF26E7846500A657F8 /* getDefaultGoogleUrl.swift in Sources */,
