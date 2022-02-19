@@ -136,6 +136,10 @@ class StateManager: ObservableObject {
         return URL(string: "https://api.cyruskrauss.com/oauth/google")!
     }
     
+    func activeFileUrl() -> URL {
+        return URL(string: "https://docs.google.com/spreadsheets/d/\(self.activeFile!.id)")!
+    }
+    
     func createSheetUrl(title: String) -> Void {
         let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
         

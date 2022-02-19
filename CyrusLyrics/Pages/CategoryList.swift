@@ -8,19 +8,33 @@
 import SwiftUI
 
 struct CategoryList: View {
+    @Environment(\.openURL) var openURL
     @StateObject var stateManager = StateManager.Get()
 
     var body: some View {
         NavigationView {
             VStack {
-                if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
-                    List {
-                        Text("No categories to show. Go log in to your Google Docs account and add some songs to the '" + stateManager.activeFile!.name + "' Google Sheet document!" )
+                List {
+                    if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
+                        Text("No categories to show." )
+                    } else {
+                        ForEach(stateManager.categories, id: \.id) { category in
+                            NavigationLink(destination: CategoryDetailView(category: category)) {
+                                Text(category.name)
+                            }
+                        }
                     }
-                } else {
-                    List(stateManager.categories, id: \.id) { category in
-                        NavigationLink(destination: CategoryDetailView(category: category)) {
-                            Text(category.name)
+                    if (stateManager.isUserFile()) {
+                        Button(action: {
+                            openURL(stateManager.activeFileUrl())
+                        }) {
+                            Text("Add Songs")
+                                .fontWeight(.semibold)
+                                .frame(minWidth: 0, maxWidth: .infinity)
+                                .padding()
+                                .foregroundColor(.white)
+                                .background(Color("Primary"))
+                                .cornerRadius(40)
                         }
                     }
                 }
