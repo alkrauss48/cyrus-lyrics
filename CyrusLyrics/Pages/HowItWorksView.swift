@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct HowItWorksView: View {
-    let items: [Bookmark] = [.example1, .example2, .example3]
+    let items: [FAQItem] = FAQItem.items
     @StateObject var stateManager = StateManager.Get()
 
     var body: some View {
         NavigationView {
             List(items, children: \.items) { row in
-                Image(systemName: row.icon)
                 Text(row.name)
             }
             .navigationTitle("How It Works")
