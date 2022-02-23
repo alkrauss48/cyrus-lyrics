@@ -25,16 +25,20 @@ struct CategoryList: View {
                         }
                     }
                     if (stateManager.isUserFile()) {
-                        Button(action: {
-                            openURL(stateManager.activeFileUrl())
-                        }) {
-                            Text("Add Songs")
-                                .fontWeight(.semibold)
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .padding()
-                                .foregroundColor(.white)
-                                .background(Color("Primary"))
-                                .cornerRadius(40)
+                        if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
+                            Button(action: {
+                                openURL(stateManager.activeFileUrl())
+                            }) {
+                                Text("Add Songs")
+                                    .fontWeight(.semibold)
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                    .padding()
+                                    .foregroundColor(.white)
+                                    .background(Color("Primary"))
+                                    .cornerRadius(40)
+                            }
+                        } else {
+                            Text("Download the Google Sheets app to add songs to your list.")
                         }
                     }
                 }

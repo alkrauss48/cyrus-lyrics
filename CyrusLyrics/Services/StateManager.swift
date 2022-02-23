@@ -137,7 +137,7 @@ class StateManager: ObservableObject {
     }
     
     func activeFileUrl() -> URL {
-        return URL(string: "https://docs.google.com/spreadsheets/d/\(self.activeFile!.id)")!
+        return URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(self.activeFile!.id)")!
     }
     
     func createSheetUrl(title: String) -> Void {
