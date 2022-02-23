@@ -30,6 +30,14 @@ struct SetDataView: View {
                                     Text(file.name)
                                 }
                             })
+                                .swipeActions {
+                                    Button {
+                                        stateManager.viewFile(file: file)
+                                    } label: {
+                                        Label("View", systemImage: "eye.fill")
+                                    }
+                                    .tint(.yellow)
+                                }
                         }
                     }
                 }
@@ -48,7 +56,31 @@ struct SetDataView: View {
                                 } else {
                                     Text(file.name)
                                 }
-                            })                    }
+                            })
+                                .swipeActions {
+                                    if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
+                                        Button {
+                                            stateManager.editFile(file: file)
+                                        } label: {
+                                            Label("Edit", systemImage: "square.and.pencil")
+                                        }
+                                        .tint(.blue)
+                                    } else {
+                                        Button {
+                                            stateManager.viewFile(file: file)
+                                        } label: {
+                                            Label("View", systemImage: "eye.fill")
+                                        }
+                                        .tint(.yellow)
+                                    }
+                                    
+                                    Button(role: .destructive) {
+                                        print("Deleting conversation")
+                                    } label: {
+                                        Label("Delete", systemImage: "trash.fill")
+                                    }
+                                }
+                        }
                     }
                 }
                 Section(header: Text("Actions")) {

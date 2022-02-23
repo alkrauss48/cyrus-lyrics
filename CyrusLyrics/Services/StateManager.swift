@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 class StateManager: ObservableObject {
+    @Environment(\.openURL) var openURL
+
     @Published var menuOpen: Bool = false
     @Published var rootView: String = StateManager.CATEGORY_LIST_VIEW
     @Published var oauthQuery: String = ""
@@ -138,6 +140,14 @@ class StateManager: ObservableObject {
     
     func activeFileUrl() -> URL {
         return URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(self.activeFile!.id)")!
+    }
+    
+    func viewFile(file: APIFile) {
+        openURL(URL(string: "https://docs.google.com/spreadsheets/d/\(file.id)")!)
+    }
+    
+    func editFile(file: APIFile) {
+        openURL(URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(file.id)")!)
     }
     
     func createSheetUrl(title: String) -> Void {
