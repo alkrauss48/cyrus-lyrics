@@ -83,7 +83,13 @@ struct SetDataView: View {
                         }
                     }
                 }
-                Section(header: Text("Actions")) {
+                Section(header: Text("Actions"), footer: HStack {
+                    Text("Powered by ")
+                    Image("google-logo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 15, height: 15)
+                }) {
                     if (!stateManager.isLoggedIn()) {
                         Link("Login", destination: stateManager.authUrl())
                     } else {
