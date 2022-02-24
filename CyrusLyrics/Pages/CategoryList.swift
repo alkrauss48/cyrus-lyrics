@@ -15,33 +15,35 @@ struct CategoryList: View {
         NavigationView {
             VStack {
                 List {
-                    if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
-                        Text("No categories to show." )
-                    } else {
-                        ForEach(stateManager.categories, id: \.id) { category in
-                            NavigationLink(destination: CategoryDetailView(category: category)) {
-                                Text(category.name)
-                            }
-                        }
-                    }
-                    if (stateManager.isUserFile()) {
-                        if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
-                            Button(action: {
-                                openURL(stateManager.activeFileUrl())
-                            }) {
-                                Text("Add Songs")
-                                    .fontWeight(.semibold)
-                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                    .padding()
-                                    .foregroundColor(.white)
-                                    .background(Color("Primary"))
-                                    .cornerRadius(40)
-                            }
+                    Section(footer: Text(stateManager.activeFile != nil ? "List: " + stateManager.activeFile!.name : "")) {
+                        if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
+                            Text("No categories to show." )
                         } else {
-                            Text("Download the Google Sheets app to add songs to your list.")
+                            ForEach(stateManager.categories, id: \.id) { category in
+                                NavigationLink(destination: CategoryDetailView(category: category)) {
+                                    Text(category.name)
+                                }
+                            }
+                        }
+                        if (stateManager.isUserFile()) {
+                            if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
+                                Button(action: {
+                                    openURL(stateManager.activeFileUrl())
+                                }) {
+                                    Text("Add Songs")
+                                        .fontWeight(.semibold)
+                                        .frame(minWidth: 0, maxWidth: .infinity)
+                                        .padding()
+                                        .foregroundColor(.white)
+                                        .background(Color("Primary"))
+                                        .cornerRadius(40)
+                                }
+                            } else {
+                                Text("Download the Google Sheets app to add songs to your list.")
+                            }
                         }
                     }
-                }
+                }.listStyle(InsetGroupedListStyle())
             }
             .refreshable {
                 stateManager.refreshList()
