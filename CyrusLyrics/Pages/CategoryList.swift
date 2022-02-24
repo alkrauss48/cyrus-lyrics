@@ -10,21 +10,22 @@ import SwiftUI
 struct CategoryList: View {
     @Environment(\.openURL) var openURL
     @StateObject var stateManager = StateManager.Get()
-
+    
+    func getListFooterText() -> String {
+        return stateManager.activeFile != nil ? "List: " + stateManager.activeFile!.name : ""
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
                 List {
-                    Section(footer: Text(stateManager.activeFile != nil ? "List: " + stateManager.activeFile!.name : "")) {
-                        if (stateManager.activeFile != nil && stateManager.categories.isEmpty) {
-                            Text("No categories to show." )
-                        } else {
-                            ForEach(stateManager.categories, id: \.id) { category in
-                                NavigationLink(destination: CategoryDetailView(category: category)) {
-                                    Text(category.name)
-                                }
+                    Section(footer: Text(getListFooterText())) {
+                        ForEach(stateManager.categories, id: \.id) { category in
+                            NavigationLink(destination: CategoryDetailView(category: category)) {
+                                Text(category.name)
                             }
                         }
+                        
                         if (stateManager.isUserFile()) {
                             if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
                                 Button(action: {

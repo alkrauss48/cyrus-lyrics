@@ -59,7 +59,7 @@ struct MenuContent: View {
                 stateManager.rootView = StateManager.SET_DATA_VIEW
                 stateManager.toggleMenu()
             }, label: {
-                Text("Set Data")
+                Text("Change List")
             })
             Section(header: Text("About")) {
                 Button(action: {

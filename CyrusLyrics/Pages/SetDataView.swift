@@ -92,12 +92,12 @@ struct SetDataView: View {
                         }, label: {
                             if (stateManager.isCreatingSheet) {
                                 HStack {
-                                    Text("Create Sheet")
+                                    Text("Create List")
                                     Spacer()
                                     ProgressView()
                                 }
                             } else {
-                                Text("Create Sheet")
+                                Text("Create List")
                             }
                         })
                         Button(action: {
@@ -112,7 +112,7 @@ struct SetDataView: View {
                 stateManager.listDefaultSheets()
                 stateManager.listUserSheets()
             }
-            .navigationTitle("Set Data")
+            .navigationTitle("Change List")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
