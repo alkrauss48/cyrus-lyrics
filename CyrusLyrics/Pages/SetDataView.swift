@@ -75,7 +75,7 @@ struct SetDataView: View {
                                     }
                                     
                                     Button(role: .destructive) {
-                                        print("Deleting conversation")
+                                        stateManager.deleteFile(file: file)
                                     } label: {
                                         Label("Delete", systemImage: "trash.fill")
                                     }

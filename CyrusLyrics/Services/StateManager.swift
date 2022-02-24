@@ -26,6 +26,9 @@ class StateManager: ObservableObject {
     static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
     static var SET_DATA_VIEW = "SET_DATA_VIEW"
     static var HOW_IT_WORKS_VIEW = "HOW_IT_WORKS_VIEW"
+    
+//    static var BASE_API_URL = "https://api.cyruskrauss.com"
+    static var BASE_API_URL = "https://a652-72-211-8-17.ngrok.io"
 
     static var stateManager = StateManager()
     
@@ -135,7 +138,7 @@ class StateManager: ObservableObject {
     }
     
     func authUrl() -> URL {
-        return URL(string: "https://api.cyruskrauss.com/oauth/google")!
+        return URL(string: StateManager.BASE_API_URL + "/oauth/google")!
     }
     
     func activeFileUrl() -> URL {
@@ -153,47 +156,67 @@ class StateManager: ObservableObject {
     func createSheetUrl(title: String) -> Void {
         let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
         
-        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets/new?title=\(encodedTitle!)&" + self.oauthQuery)
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?title=\(encodedTitle!)&" + self.oauthQuery)
         
         guard let fullRequestUrl = requestUrl else {
             return
         }
         
         self.isCreatingSheet = true
-        makeRequest(url: fullRequestUrl) { data in
+        makeRequest(url: fullRequestUrl, method: "POST") { data in
             // Reload the user's sheets
             self.listUserSheets()
         }
     }
+
+    func deleteFile(file: APIFile) -> Void {
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(file.id)?" + self.oauthQuery)!
+        
+        makeRequest(url: requestUrl, method: "DELETE") { data in
+            guard let index = (self.userFiles.firstIndex{ $0.id == file.id }) else {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.userFiles.remove(at: index)
+                if (self.activeFile != nil && self.activeFile!.id == file.id) {
+                    self.setActiveFile(file: self.defaultFiles[0])
+                }
+            }
+            
+            UserDefaults.standard.set(try? PropertyListEncoder().encode(self.userFiles), forKey:"userFiles")
+        }
+    }
     
     func listUserSheets() -> Void {
-        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets?" + self.oauthQuery)!
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?" + self.oauthQuery)!
         
-        makeRequest(url: requestUrl) { data in
+        makeRequest(url: requestUrl, method: "GET") { data in
             do {
                 let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
                 DispatchQueue.main.async {
                     self.userFiles = result.files
+                    self.isCreatingSheet = false
                 }
                 
                 UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
             } catch let responseError {
                 DispatchQueue.main.async {
                     self.userFiles = []
+                    self.isCreatingSheet = false
+
                 }
                 
                 UserDefaults.standard.removeObject(forKey: "userFiles")
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
-            
-            self.isCreatingSheet = false
         }
     }
     
     func listDefaultSheets() -> Void {
-        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets/default")!
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/default")!
         
-        makeRequest(url: requestUrl) { data in
+        makeRequest(url: requestUrl, method: "GET") { data in
             do {
                 let result = try JSONDecoder().decode([APIFile].self, from: data)
                 
@@ -217,10 +240,10 @@ class StateManager: ObservableObject {
             return
         }
                 
-        let requestUrl = URL(string: "https://api.cyruskrauss.com/sheets/\(activeSheet.id)?" + self.oauthQuery)!
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(activeSheet.id)?" + self.oauthQuery)!
         
         // TODO: Update this route
-        makeRequest(url: requestUrl) { data in
+        makeRequest(url: requestUrl, method: "GET") { data in
             do {
                 let result = try JSONDecoder().decode(APIGetSheetResponse.self, from: data)
                 let categories = self.oauthDataAdapter.processData(rows: result.values)
@@ -245,7 +268,7 @@ class StateManager: ObservableObject {
         
         let requestUrl = URL(string: dataAdapter.getDataUrl(sheetId: file.id))!
         
-        makeRequest(url: requestUrl) { data in
+        makeRequest(url: requestUrl, method: "GET") { data in
             // Convert HTTP Response Data to a simple String
             if let dataString = String(data: data, encoding: .utf8) {
                 print("Response data string:\n \(dataString)")
@@ -276,8 +299,9 @@ class StateManager: ObservableObject {
         return nil;
     }
     
-    private func makeRequest(url: URL, callback: @escaping (Data) -> ()) {
-        let request = URLRequest(url: url)
+    private func makeRequest(url: URL, method: String, callback: @escaping (Data) -> ()) {
+        var request = URLRequest(url: url)
+        request.httpMethod = method
         
         // Create the session object
         let session = URLSession.shared
