@@ -49,7 +49,13 @@ struct SetDataView: View {
                             Button(action: {
                                 stateManager.setActiveFile(file: file, isUserFile: true)
                             }, label: {
-                                if (stateManager.activeFile == file) {
+                                if (stateManager.isDeletingSheet == file) {
+                                    HStack {
+                                        Text(file.name)
+                                        Spacer()
+                                        ProgressView()
+                                    }
+                                } else if (stateManager.activeFile == file) {
                                     HStack {
                                         Text(file.name)
                                         Spacer()

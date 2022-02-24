@@ -19,6 +19,7 @@ class StateManager: ObservableObject {
     @Published var categories = [AppCategory]()
     @Published var activeFile: APIFile?
     @Published var isCreatingSheet: Bool = false
+    @Published var isDeletingSheet: APIFile?
     
     var dataAdapter = SheetsV2Adapter()
     var oauthDataAdapter = OAuthSheetAdapter()
@@ -172,6 +173,7 @@ class StateManager: ObservableObject {
     func deleteFile(file: APIFile) -> Void {
         let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(file.id)?" + self.oauthQuery)!
         
+        self.isDeletingSheet = file
         makeRequest(url: requestUrl, method: "DELETE") { data in
             guard let index = (self.userFiles.firstIndex{ $0.id == file.id }) else {
                 return
@@ -182,6 +184,7 @@ class StateManager: ObservableObject {
                 if (self.activeFile != nil && self.activeFile!.id == file.id) {
                     self.setActiveFile(file: self.defaultFiles[0])
                 }
+                self.isDeletingSheet = nil
             }
             
             UserDefaults.standard.set(try? PropertyListEncoder().encode(self.userFiles), forKey:"userFiles")
