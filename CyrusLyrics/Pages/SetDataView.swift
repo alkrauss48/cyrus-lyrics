@@ -10,7 +10,9 @@ import SwiftUI
 struct SetDataView: View {
     @StateObject var stateManager = StateManager.Get()
     @State private var showCreateActionSheet = false
-    
+    @State private var isConfirming = false
+    @State private var selectedFileToDelete: APIFile?
+
     var body: some View {
         NavigationView {
             List {
@@ -75,7 +77,9 @@ struct SetDataView: View {
                                     }
                                     
                                     Button(role: .destructive) {
-                                        stateManager.deleteFile(file: file)
+                                        isConfirming = true
+                                        self.selectedFileToDelete = file
+                                        print("foobar")
                                     } label: {
                                         Label("Delete", systemImage: "trash.fill")
                                     }
@@ -114,6 +118,24 @@ struct SetDataView: View {
                     }
                 }
            }
+            .confirmationDialog(
+                "Are you sure you want to delete this file?",
+                isPresented: $isConfirming
+            ) {
+                Button(role: .destructive) {
+                    if (selectedFileToDelete != nil) {
+                        stateManager.deleteFile(file: selectedFileToDelete!)
+                    }
+                    
+                    selectedFileToDelete = nil
+                } label: {
+                    Text("Send List to Trash")
+                }
+                
+                Button("Cancel", role: .cancel) {
+                    selectedFileToDelete = nil
+                }
+            }
             .refreshable {
                 stateManager.listDefaultSheets()
                 stateManager.listUserSheets()
