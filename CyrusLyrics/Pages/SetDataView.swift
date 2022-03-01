@@ -12,6 +12,7 @@ struct SetDataView: View {
     @State private var showCreateActionSheet = false
     @State private var isConfirming = false
     @State private var selectedFileToDelete: APIFile?
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         NavigationView {
@@ -32,6 +33,7 @@ struct SetDataView: View {
                                     Text(file.name)
                                 }
                             })
+                                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     Button {
                                         stateManager.viewFile(file: file)
@@ -65,6 +67,7 @@ struct SetDataView: View {
                                     Text(file.name)
                                 }
                             })
+                                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
                                         Button {
@@ -102,6 +105,7 @@ struct SetDataView: View {
                 }) {
                     if (!stateManager.isLoggedIn()) {
                         Link("Login", destination: stateManager.authUrl())
+                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                     } else {
                         Button(action: {
                             self.showCreateActionSheet.toggle()
@@ -116,11 +120,15 @@ struct SetDataView: View {
                                 Text("Create List")
                             }
                         })
+                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+
                         Button(action: {
                             self.stateManager.logOut()
                         }, label: {
                             Text("Log out")
                         })
+                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+
                     }
                 }
            }
@@ -166,26 +174,39 @@ struct SetDataView: View {
 
 struct SheetView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.colorScheme) var colorScheme
     @StateObject var stateManager = StateManager.Get()
     @State var sheetName: String = "My CyrusLyrics Songs"
+    @FocusState private var sheetNameFieldIsFocused: Field?
+
+    private enum Field: Int, Hashable {
+        case sheetNameField
+    }
     
     var body: some View {
         NavigationView {
             Form {
                 TextField("Sheet Name", text: $sheetName)
+                    .focused($sheetNameFieldIsFocused, equals: .sheetNameField)
+                    .submitLabel(.go)
+                    .onSubmit {
+                        stateManager.createSheetUrl(title: self.sheetName)
+                        dismiss()
+                    }
                 Section {
                     Button(action: {
                         dismiss()
                     }) {
                         Text("Cancel")
                     }
-                    Button(action: {
-                        stateManager.createSheetUrl(title: self.sheetName)
-                        dismiss()
-                    }) {
-                        Text("Submit")
-                    }
+                    .foregroundColor(Color.red)
                 }
+            }
+            .onAppear {
+                print("on appear")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {  /// Anything over 0.5 seems to work
+                    sheetNameFieldIsFocused = .sheetNameField
+                 }
             }
             .navigationBarTitle("Create Sheet")
         }

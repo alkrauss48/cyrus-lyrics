@@ -46,6 +46,7 @@ struct MainMenu: View {
 
 struct MenuContent: View {
     @StateObject var stateManager = StateManager.Get()
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         List {
@@ -55,12 +56,16 @@ struct MenuContent: View {
             }, label: {
                 Text("Home")
             })
+                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+            
             Button(action: {
                 stateManager.rootView = StateManager.SET_DATA_VIEW
                 stateManager.toggleMenu()
             }, label: {
                 Text("Change List")
             })
+                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+            
             Section(header: Text("About")) {
                 Button(action: {
                     stateManager.rootView = StateManager.HOW_IT_WORKS_VIEW
@@ -68,6 +73,7 @@ struct MenuContent: View {
                 }, label: {
                     Text("How It Works")
                 })
+                    .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
             }
         }
     }
