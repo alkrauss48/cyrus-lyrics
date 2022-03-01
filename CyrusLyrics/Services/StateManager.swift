@@ -28,8 +28,8 @@ class StateManager: ObservableObject {
     static var SET_DATA_VIEW = "SET_DATA_VIEW"
     static var HOW_IT_WORKS_VIEW = "HOW_IT_WORKS_VIEW"
     
-//    static var BASE_API_URL = "https://api.cyruskrauss.com"
-    static var BASE_API_URL = "https://a652-72-211-8-17.ngrok.io"
+    static var BASE_API_URL = "https://api.cyruskrauss.com"
+//    static var BASE_API_URL = "https://a652-72-211-8-17.ngrok.io"
 
     static var stateManager = StateManager()
     
