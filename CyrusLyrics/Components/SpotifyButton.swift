@@ -14,18 +14,14 @@ struct SpotifyButton: View {
         Button(action: {
             UIApplication.shared.open(url)
         }) {
-            HStack(spacing: 2.0) {
-                Text("Open in Spotify")
-                Spacer()
-                Image(systemName: "arrow.forward")
-            }.foregroundColor(Color.white)
-            .padding(.vertical, 8.0)
-            .frame(maxWidth: .infinity)
-            .padding(/*@START_MENU_TOKEN@*/.horizontal/*@END_MENU_TOKEN@*/)
-            
-                
+            Text("Open in Spotify")
+                .fontWeight(.semibold)
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .padding()
+                .foregroundColor(.white)
+                .background(Color(red: 37 / 255, green: 211 / 255, blue: 78 / 255))
+                .cornerRadius(40)
         }
-        .background(Color(red: 37 / 255, green: 211 / 255, blue: 78 / 255))
     }
 }
 

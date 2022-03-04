@@ -26,7 +26,9 @@ struct LinkDetailView: View {
                     let url = URL(string: link!.spotifyUrl)
                     
                     if UIApplication.shared.canOpenURL(url!) {
-                        SpotifyButton(url: url!)
+                        HStack {
+                            SpotifyButton(url: url!)
+                        }.padding()
                     }
                 }
             }
