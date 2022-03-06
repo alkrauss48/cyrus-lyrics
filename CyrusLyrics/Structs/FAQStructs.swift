@@ -19,6 +19,9 @@ struct FAQItem: Identifiable {
         FAQItem(name: "What is CyrusLyrics?", items: [
             FAQItem(name: "Welcome! This app is about helping you quickly store, find, and add the lyrics of songs that you like to sing.")
         ]),
+        FAQItem(name: "How is this app's size so small?", items: [
+            FAQItem(name: "Thanks for noticing! There are no ads, no external plugins in the code, and none of your personal data is stored, so this app is tiny as can be.")
+        ]),
         FAQItem(name: "Who is Cyrus?", items: [
             FAQItem(name: "Cyrus is my son, and I like to sing to him. This app helps with that!")
         ]),
