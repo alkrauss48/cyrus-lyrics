@@ -15,8 +15,6 @@ struct HowItWorksView: View {
     var body: some View {
         NavigationView {
             VStack{
-                
-                
                 List(items, children: \.items) { row in
                     Text(row.name)
                 }
@@ -24,7 +22,7 @@ struct HowItWorksView: View {
                     Button(action: {
                         openURL(URL(string: "https://www.youtube.com/playlist?list=PLWXp2X5PBDOmFd1kqyYsPtYwdgXIfDZT3")!)
                     }) {
-                        Text("Watch Tutorial")
+                        Text("View Tutorials")
                             .fontWeight(.semibold)
                             .frame(minWidth: 0, maxWidth: .infinity)
                             .padding()

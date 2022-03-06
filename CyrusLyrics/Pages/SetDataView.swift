@@ -186,7 +186,7 @@ struct SheetView: View {
     var body: some View {
         NavigationView {
             Form {
-                TextField("Sheet Name", text: $sheetName)
+                TextField("List Name", text: $sheetName)
                     .focused($sheetNameFieldIsFocused, equals: .sheetNameField)
                     .submitLabel(.go)
                     .onSubmit {
@@ -208,7 +208,7 @@ struct SheetView: View {
                     sheetNameFieldIsFocused = .sheetNameField
                  }
             }
-            .navigationBarTitle("Create Sheet")
+            .navigationBarTitle("Create List")
         }
     }
 }
