@@ -21,7 +21,13 @@ struct CategoryList: View {
                 List {
                     Section(footer: Text(getListFooterText())) {
                         if (stateManager.categories.isEmpty) {
-                            Text("Your song list is empty. Click below to add songs.")
+                            if (stateManager.activeFile != nil && UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
+                                Text("Your list is empty. Click below to add songs.")
+                                    .padding([.bottom, .top], 10)
+                            } else {
+                                Text("Your list is empty.")
+                                    .padding([.bottom, .top], 10)
+                            }
                         }
                         
                         ForEach(stateManager.categories, id: \.id) { category in

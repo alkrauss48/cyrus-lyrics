@@ -198,7 +198,7 @@ class StateManager: ObservableObject {
             do {
                 let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
                 DispatchQueue.main.async {
-                    self.userFiles = result.files
+                    self.userFiles = result.files.sorted { $0.name < $1.name }
                     self.isCreatingSheet = false
                 }
                 

@@ -187,6 +187,8 @@ struct SheetView: View {
         NavigationView {
             Form {
                 TextField("List Name", text: $sheetName)
+                    .modifier(TextFieldClearButton(text: $sheetName))
+                    .multilineTextAlignment(.leading)
                     .focused($sheetNameFieldIsFocused, equals: .sheetNameField)
                     .submitLabel(.go)
                     .onSubmit {
@@ -209,6 +211,27 @@ struct SheetView: View {
                  }
             }
             .navigationBarTitle("Create List")
+        }
+    }
+}
+
+struct TextFieldClearButton: ViewModifier {
+    @Binding var text: String
+    @Environment(\.colorScheme) var colorScheme
+    
+    func body(content: Content) -> some View {
+        HStack {
+            content
+            
+            if !text.isEmpty {
+                Button(
+                    action: { self.text = "" },
+                    label: {
+                        Image(systemName: "delete.left")
+                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                    }
+                )
+            }
         }
     }
 }

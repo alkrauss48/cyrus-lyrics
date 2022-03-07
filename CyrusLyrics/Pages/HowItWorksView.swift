@@ -17,6 +17,7 @@ struct HowItWorksView: View {
             VStack{
                 List(items, children: \.items) { row in
                     Text(row.name)
+                        
                 }
                 HStack {
                     Button(action: {
