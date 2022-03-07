@@ -29,7 +29,7 @@ struct FAQItem: Identifiable {
             FAQItem(name: "The lyrics are found via a simple Google search, with the ability to provide your own URL or lyrics for your own song lists.")
         ]),
         FAQItem(name: "How does the shuffle icon work?", items: [
-            FAQItem(name: "The shuffle icon will shuffle at your current level. I.e. All songs, a single category, or a single sub-category.")
+            FAQItem(name: "The shuffle icon will shuffle at your current level. I.e. All songs, a single genre, or a single artist.")
         ]),
         FAQItem(name: "How do I create my own song lists?", items: [
             FAQItem(name: "Go to the 'Change List' page, click 'Login' followed by 'Create List.' From there, enter your desired list name, and a new Google Sheet will be created for you on your Google account.")

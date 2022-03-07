@@ -21,7 +21,7 @@ struct CategoryList: View {
                 List {
                     Section(footer: Text(getListFooterText())) {
                         if (stateManager.categories.isEmpty) {
-                            Text("Add songs to show your categories")
+                            Text("Your song list is empty. Click below to add songs.")
                         }
                         
                         ForEach(stateManager.categories, id: \.id) { category in
@@ -59,7 +59,7 @@ struct CategoryList: View {
             .refreshable {
                 stateManager.refreshList()
             }
-            .navigationTitle("Categories")
+            .navigationTitle("Home")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {

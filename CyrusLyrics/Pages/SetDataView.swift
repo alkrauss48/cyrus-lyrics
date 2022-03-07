@@ -17,34 +17,6 @@ struct SetDataView: View {
     var body: some View {
         NavigationView {
             List {
-                if (stateManager.defaultFiles.count > 0) {
-                    Section(header: Text("Preloaded Lists")) {
-                        ForEach(stateManager.defaultFiles, id: \.self) { file in
-                            Button(action: {
-                                stateManager.setActiveFile(file: file)
-                            }, label: {
-                                if (stateManager.activeFile == file) {
-                                    HStack {
-                                        Text(file.name)
-                                        Spacer()
-                                        Image(systemName: "checkmark")
-                                    }
-                                } else {
-                                    Text(file.name)
-                                }
-                            })
-                                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-                                .swipeActions {
-                                    Button {
-                                        stateManager.viewFile(file: file)
-                                    } label: {
-                                        Label("View", systemImage: "eye.fill")
-                                    }
-                                    .tint(.yellow)
-                                }
-                        }
-                    }
-                }
                 if (stateManager.userFiles.count > 0) {
                     Section(header: Text("Your Lists")) {
                         ForEach(stateManager.userFiles, id: \.self) { file in
@@ -92,6 +64,34 @@ struct SetDataView: View {
                                     } label: {
                                         Label("Delete", systemImage: "trash.fill")
                                     }
+                                }
+                        }
+                    }
+                }
+                if (stateManager.defaultFiles.count > 0) {
+                    Section(header: Text("Preloaded Lists")) {
+                        ForEach(stateManager.defaultFiles, id: \.self) { file in
+                            Button(action: {
+                                stateManager.setActiveFile(file: file)
+                            }, label: {
+                                if (stateManager.activeFile == file) {
+                                    HStack {
+                                        Text(file.name)
+                                        Spacer()
+                                        Image(systemName: "checkmark")
+                                    }
+                                } else {
+                                    Text(file.name)
+                                }
+                            })
+                                .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                                .swipeActions {
+                                    Button {
+                                        stateManager.viewFile(file: file)
+                                    } label: {
+                                        Label("View", systemImage: "eye.fill")
+                                    }
+                                    .tint(.yellow)
                                 }
                         }
                     }
