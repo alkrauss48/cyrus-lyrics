@@ -22,7 +22,7 @@ struct CategoryList: View {
                     Section(footer: Text(getListFooterText())) {
                         if (stateManager.categories.isEmpty) {
                             if (stateManager.activeFile != nil && UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
-                                Text("Your list is empty. Click below to add songs.")
+                                Text("Your list is empty. Click the button below to add songs.")
                                     .padding([.bottom, .top], 10)
                             } else {
                                 Text("Your list is empty.")
@@ -65,7 +65,7 @@ struct CategoryList: View {
             .refreshable {
                 stateManager.refreshList()
             }
-            .navigationTitle("Home")
+            .navigationTitle("Genres")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {

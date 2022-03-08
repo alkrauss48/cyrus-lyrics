@@ -54,7 +54,7 @@ struct MenuContent: View {
                 stateManager.rootView = StateManager.CATEGORY_LIST_VIEW
                 stateManager.toggleMenu()
             }, label: {
-                Text("Home")
+                Text("Genres")
             })
                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
             
