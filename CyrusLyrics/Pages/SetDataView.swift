@@ -192,6 +192,10 @@ struct SheetView: View {
                     .focused($sheetNameFieldIsFocused, equals: .sheetNameField)
                     .submitLabel(.go)
                     .onSubmit {
+                        if (sheetName.isEmpty) {
+                            return
+                        }
+                        
                         stateManager.createSheetUrl(title: self.sheetName)
                         dismiss()
                     }
@@ -217,7 +221,6 @@ struct SheetView: View {
 
 struct TextFieldClearButton: ViewModifier {
     @Binding var text: String
-    @Environment(\.colorScheme) var colorScheme
     
     func body(content: Content) -> some View {
         HStack {
@@ -228,7 +231,7 @@ struct TextFieldClearButton: ViewModifier {
                     action: { self.text = "" },
                     label: {
                         Image(systemName: "delete.left")
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                            .foregroundColor(Color.gray)
                     }
                 )
             }
