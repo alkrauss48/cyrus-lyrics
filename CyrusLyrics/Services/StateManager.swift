@@ -185,9 +185,8 @@ class StateManager: ObservableObject {
                     self.setActiveFile(file: self.defaultFiles[0])
                 }
                 self.isDeletingSheet = nil
+                UserDefaults.standard.set(try? PropertyListEncoder().encode(self.userFiles), forKey:"userFiles")
             }
-            
-            UserDefaults.standard.set(try? PropertyListEncoder().encode(self.userFiles), forKey:"userFiles")
         }
     }
     
