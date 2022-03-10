@@ -24,9 +24,13 @@ class OAuthSheetAdapter {
             let categoryCell = row[0]
             let subCategoryCell = row[1]
             let linkNameCell = row[2]
-            let linkUrlCell = row.count >= 4 ? row[3] : nil
-            let linkLyricsCell = row.count >= 5 ? row[4] : nil
-            let linkSpotifyCell = row.count >= 6 ? row[5] : nil
+            let linkUrlCell = row.count >= 4 && !row[3].isEmpty ? row[3] : nil
+            let linkLyricsCell = row.count >= 5 && !row[4].isEmpty ? row[4] : nil
+            let linkSpotifyCell = row.count >= 6 && !row[5].isEmpty ? row[5] : nil
+            
+            if (categoryCell.isEmpty || subCategoryCell.isEmpty || linkNameCell.isEmpty) {
+                continue
+            }
 
             // Process the row's category
             var categoryIndex: Int
