@@ -25,6 +25,7 @@ struct ContentView: View {
                     isOpen: stateManager.menuOpen,
                     menuClose: stateManager.toggleMenu)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
 
