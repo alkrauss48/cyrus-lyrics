@@ -58,18 +58,16 @@ class StateManager: ObservableObject {
             }
         }
         
-        // Load up the active file
-        if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
-            DispatchQueue.main.async {
-                self.activeFile = storedActiveFile
-            }
-        }
-        
         // Load up app categories
         if let categories = deserializeStoredValueAs(key: "categories", type: [AppCategory].self) {
             setCategories(newCategories: categories)
-        } else {
-            queryAppData()
+        }
+        
+        // Load up the active file
+        if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
+            let isUserFile = self.userFiles.contains(storedActiveFile)
+
+            setActiveFile(file: storedActiveFile, isUserFile: isUserFile)
         }
     }
     
@@ -93,14 +91,12 @@ class StateManager: ObservableObject {
     }
     
     func setActiveFile(file: APIFile, isUserFile: Bool = false) -> Void {
-        DispatchQueue.main.async {
-            self.activeFile = file
-            
-            if (isUserFile) {
-                self.getActiveSheetData()
-            } else {
-                self.queryAppData()
-            }
+        self.activeFile = file
+        
+        if (isUserFile) {
+            self.getActiveSheetData()
+        } else {
+            self.queryAppData()
         }
         
         UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
