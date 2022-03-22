@@ -20,6 +20,7 @@ class StateManager: ObservableObject {
     @Published var activeFile: APIFile?
     @Published var isCreatingSheet: Bool = false
     @Published var isDeletingSheet: APIFile?
+    @Published var showLoginActionSheet = false
     
     var dataAdapter = SheetsV2Adapter()
     var oauthDataAdapter = OAuthSheetAdapter()

@@ -104,7 +104,11 @@ struct SetDataView: View {
                         .frame(width: 15, height: 15)
                 }) {
                     if (!stateManager.isLoggedIn()) {
-                        Link("Login", destination: stateManager.authUrl())
+                        Button(action: {
+                            self.stateManager.showLoginActionSheet = true
+                        }, label: {
+                            Text("Login")
+                        })
                             .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                     } else {
                         Button(action: {
@@ -167,6 +171,9 @@ struct SetDataView: View {
         }
         .sheet(isPresented: $showCreateActionSheet) {
             SheetView()
+        }
+        .sheet(isPresented: $stateManager.showLoginActionSheet) {
+            SafariView(url: stateManager.authUrl())
         }
         
     }
