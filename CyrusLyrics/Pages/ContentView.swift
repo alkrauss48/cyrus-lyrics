@@ -11,24 +11,9 @@ struct ContentView: View {
     @StateObject var stateManager = StateManager.Get()
 
     var body: some View {
-        ZStack {
-            if(stateManager.rootView == "SET_DATA_VIEW") {
-                SetDataView()
-            } else if (stateManager.rootView == "HOW_IT_WORKS_VIEW") {
-                HowItWorksView()
-            } else {
-                CategoryList()
-            }
-            
-            
-            MainMenu(width: 270,
-                    isOpen: stateManager.menuOpen,
-                    menuClose: stateManager.toggleMenu)
-        }
-        .navigationViewStyle(StackNavigationViewStyle())
+        SetDataView()
+            .navigationViewStyle(StackNavigationViewStyle())
     }
-    
-
 }
 
 struct ContentView_Previews: PreviewProvider {

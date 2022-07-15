@@ -20,25 +20,15 @@ struct SetDataView: View {
                 if (stateManager.userFiles.count > 0) {
                     Section(header: Text("Your Lists")) {
                         ForEach(stateManager.userFiles, id: \.self) { file in
-                            Button(action: {
-                                stateManager.setActiveFile(file: file, isUserFile: true)
-                            }, label: {
-                                if (stateManager.isDeletingSheet == file) {
-                                    HStack {
-                                        Text(file.name)
+                            NavigationLink(destination: CategoryList(file: file)) {
+                                HStack {
+                                    Text(file.name)
+                                    if (stateManager.isDeletingSheet == file) {
                                         Spacer()
                                         ProgressView()
                                     }
-                                } else if (stateManager.activeFile == file) {
-                                    HStack {
-                                        Text(file.name)
-                                        Spacer()
-                                        Image(systemName: "checkmark")
-                                    }
-                                } else {
-                                    Text(file.name)
                                 }
-                            })
+                            }
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
@@ -71,19 +61,9 @@ struct SetDataView: View {
                 if (stateManager.defaultFiles.count > 0) {
                     Section(header: Text("Preloaded Lists")) {
                         ForEach(stateManager.defaultFiles, id: \.self) { file in
-                            Button(action: {
-                                stateManager.setActiveFile(file: file)
-                            }, label: {
-                                if (stateManager.activeFile == file) {
-                                    HStack {
-                                        Text(file.name)
-                                        Spacer()
-                                        Image(systemName: "checkmark")
-                                    }
-                                } else {
-                                    Text(file.name)
-                                }
-                            })
+                            NavigationLink(destination: CategoryList(file: file)) {
+                                Text(file.name)
+                            }
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     Button {
@@ -135,6 +115,12 @@ struct SetDataView: View {
 
                     }
                 }
+                
+                Section(header: Text("About")) {
+                    NavigationLink(destination: HowItWorksView()) {
+                        Text("How It Works")
+                    }
+                }
            }
             .confirmationDialog(
                 "Are you sure you want to delete this file?",
@@ -158,16 +144,7 @@ struct SetDataView: View {
                 stateManager.listDefaultSheets()
                 stateManager.listUserSheets()
             }
-            .navigationTitle("Change List")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        stateManager.toggleMenu()
-                    }) {
-                        Image(systemName: "line.horizontal.3")
-                    }
-                }
-            }
+            .navigationTitle("CyrusLyrics")
         }
         .sheet(isPresented: $showCreateActionSheet) {
             SheetView()

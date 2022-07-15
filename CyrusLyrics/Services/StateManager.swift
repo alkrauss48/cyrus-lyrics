@@ -12,7 +12,7 @@ class StateManager: ObservableObject {
     @Environment(\.openURL) var openURL
 
     @Published var menuOpen: Bool = false
-    @Published var rootView: String = StateManager.CATEGORY_LIST_VIEW
+    @Published var rootView: String = StateManager.SET_DATA_VIEW
     @Published var oauthQuery: String = ""
     @Published var userFiles: [APIFile] = []
     @Published var defaultFiles: [APIFile] = []
@@ -68,7 +68,7 @@ class StateManager: ObservableObject {
         if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
             let isUserFile = self.userFiles.contains(storedActiveFile)
 
-            setActiveFile(file: storedActiveFile, isUserFile: isUserFile)
+            setActiveFile(file: storedActiveFile)
         }
     }
     
@@ -91,10 +91,10 @@ class StateManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "oauthQuery")
     }
     
-    func setActiveFile(file: APIFile, isUserFile: Bool = false) -> Void {
+    func setActiveFile(file: APIFile) -> Void {
         self.activeFile = file
         
-        if (isUserFile) {
+        if (self.isUserFile()) {
             self.getActiveSheetData()
         } else {
             self.queryAppData()

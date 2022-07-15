@@ -10,16 +10,13 @@ import SwiftUI
 struct CategoryList: View {
     @Environment(\.openURL) var openURL
     @StateObject var stateManager = StateManager.Get()
-    
-    func getListFooterText() -> String {
-        return stateManager.activeFile != nil ? "List: " + stateManager.activeFile!.name : ""
-    }
+    let file: APIFile
     
     var body: some View {
-        NavigationView {
+        ZStack {
             VStack {
                 List {
-                    Section(footer: Text(getListFooterText())) {
+                    Section() {
                         if (stateManager.categories.isEmpty) {
                             if (stateManager.activeFile != nil && UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
                                 Text("Your list is empty. Click the button below to add songs.")
@@ -37,7 +34,6 @@ struct CategoryList: View {
                         }
                     }
                 }.listStyle(InsetGroupedListStyle())
-                
                 
                 if (stateManager.isUserFile()) {
                     if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
@@ -60,28 +56,24 @@ struct CategoryList: View {
                         }.padding()
                     }
                 }
-
+            }
+            .onAppear() {
+                stateManager.setActiveFile(file: file)
             }
             .refreshable {
                 stateManager.refreshList()
             }
-            .navigationTitle("Genres")
+            .navigationTitle(file.name)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        stateManager.toggleMenu()
-                    }) {
-                        Image(systemName: "line.horizontal.3")
-                    }
-                }
+                ToolbarItemHack()
                 ShuffleToolbarItem(type: "all", id: nil, isHidden: stateManager.categories.isEmpty)
             }
         }
     }
 }
 
-struct CategoryList_Previews: PreviewProvider {
-    static var previews: some View {
-        CategoryList()
-    }
-}
+//struct CategoryList_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CategoryList()
+//    }
+//}

@@ -13,11 +13,10 @@ struct HowItWorksView: View {
     @StateObject var stateManager = StateManager.Get()
 
     var body: some View {
-        NavigationView {
             VStack{
                 List(items, children: \.items) { row in
                     Text(row.name)
-                        
+                        .padding(10)
                 }
                 HStack {
                     Button(action: {
@@ -32,19 +31,8 @@ struct HowItWorksView: View {
                             .cornerRadius(40)
                     }
                 }.padding()
-                
-            }
-            .navigationTitle("How It Works")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        stateManager.toggleMenu()
-                    }) {
-                        Image(systemName: "line.horizontal.3")
-                    }
-                }
-            }
-        }
+            }.navigationTitle("How It Works")
+
     }
 }
 
