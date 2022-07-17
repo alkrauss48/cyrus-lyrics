@@ -13,27 +13,32 @@ struct CategoryList: View {
     let file: APIFile
     
     var body: some View {
-        ZStack {
             VStack {
-                List {
-                    Section() {
-                        if (stateManager.categories.isEmpty) {
-                            if (stateManager.activeFile != nil && UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
-                                Text("Your list is empty. Click the button below to add songs.")
-                                    .padding([.bottom, .top], 10)
-                            } else {
-                                Text("Your list is empty.")
-                                    .padding([.bottom, .top], 10)
+                if (stateManager.isLoadingFile) {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                } else {
+                    List {
+                        Section() {
+                            if (stateManager.categories.isEmpty) {
+                                if (stateManager.activeFile != nil && UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
+                                    Text("Your list is empty. Click the button below to add songs.")
+                                        .padding([.bottom, .top], 10)
+                                } else {
+                                    Text("Your list is empty.")
+                                        .padding([.bottom, .top], 10)
+                                }
+                            }
+                            
+                            ForEach(stateManager.categories, id: \.id) { category in
+                                NavigationLink(destination: CategoryDetailView(category: category)) {
+                                    Text(category.name)
+                                }
                             }
                         }
-                        
-                        ForEach(stateManager.categories, id: \.id) { category in
-                            NavigationLink(destination: CategoryDetailView(category: category)) {
-                                Text(category.name)
-                            }
-                        }
-                    }
-                }.listStyle(InsetGroupedListStyle())
+                    }.listStyle(InsetGroupedListStyle())
+                }
                 
                 if (stateManager.isUserFile()) {
                     if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
@@ -68,7 +73,6 @@ struct CategoryList: View {
                 ToolbarItemHack()
                 ShuffleToolbarItem(type: "all", id: nil, isHidden: stateManager.categories.isEmpty)
             }
-        }
     }
 }
 

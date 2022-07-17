@@ -21,6 +21,7 @@ class StateManager: ObservableObject {
     @Published var isCreatingSheet: Bool = false
     @Published var isDeletingSheet: APIFile?
     @Published var showLoginActionSheet = false
+    @Published var isLoadingFile: Bool = false
     
     var dataAdapter = SheetsV2Adapter()
     var oauthDataAdapter = OAuthSheetAdapter()
@@ -66,8 +67,6 @@ class StateManager: ObservableObject {
         
         // Load up the active file
         if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
-            let isUserFile = self.userFiles.contains(storedActiveFile)
-
             setActiveFile(file: storedActiveFile)
         }
     }
@@ -92,6 +91,10 @@ class StateManager: ObservableObject {
     }
     
     func setActiveFile(file: APIFile) -> Void {
+        if (self.activeFile != file) {
+            self.isLoadingFile = true;
+        }
+        
         self.activeFile = file
         
         if (self.isUserFile()) {
@@ -250,6 +253,8 @@ class StateManager: ObservableObject {
             } catch let responseError {
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
+            
+            self.isLoadingFile = false
         }
     }
   
@@ -274,6 +279,8 @@ class StateManager: ObservableObject {
                 let categories = self.dataAdapter.parseCategories(data: dataString)
                 self.parseAppData(categories: categories)
             }
+            
+            self.isLoadingFile = false
         }
     }
     
