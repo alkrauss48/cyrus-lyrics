@@ -6,11 +6,16 @@
 //
 
 import Foundation
+import Network
 import SwiftUI
 
 class StateManager: ObservableObject {
     @Environment(\.openURL) var openURL
 
+    let monitor = NWPathMonitor()
+    let queue = DispatchQueue(label: "Monitor")
+    @Published private(set) var connected: Bool = false
+    
     @Published var menuOpen: Bool = false
     @Published var rootView: String = StateManager.SET_DATA_VIEW
     @Published var oauthQuery: String = ""
@@ -40,6 +45,8 @@ class StateManager: ObservableObject {
     }
     
     init() {
+        checkConnection()
+        
         if let value = UserDefaults.standard.string(forKey: "oauthQuery") {
             self.oauthQuery = value
         }
@@ -69,6 +76,15 @@ class StateManager: ObservableObject {
         if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
             setActiveFile(file: storedActiveFile)
         }
+    }
+    
+    func checkConnection() {
+        monitor.pathUpdateHandler = { path in
+            DispatchQueue.main.async {
+                self.connected = path.status == .satisfied ? true : false
+            }
+        }
+        monitor.start(queue: queue)
     }
     
     func setOauthQuery(value: String) {

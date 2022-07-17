@@ -29,6 +29,7 @@ struct SetDataView: View {
                                     }
                                 }
                             }
+                                .disabled(!stateManager.connected && stateManager.activeFile != file)
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
@@ -37,6 +38,7 @@ struct SetDataView: View {
                                         } label: {
                                             Label("Edit", systemImage: "square.and.pencil")
                                         }
+                                        .disabled(!stateManager.connected)
                                         .tint(.blue)
                                     } else {
                                         Button {
@@ -44,6 +46,7 @@ struct SetDataView: View {
                                         } label: {
                                             Label("View", systemImage: "eye.fill")
                                         }
+                                        .disabled(!stateManager.connected)
                                         .tint(.yellow)
                                     }
                                     
@@ -54,6 +57,8 @@ struct SetDataView: View {
                                     } label: {
                                         Label("Delete", systemImage: "trash.fill")
                                     }
+                                    .disabled(!stateManager.connected)
+
                                 }
                         }
                     }
@@ -64,6 +69,7 @@ struct SetDataView: View {
                             NavigationLink(destination: CategoryList(file: file)) {
                                 Text(file.name)
                             }
+                            .disabled(!stateManager.connected && stateManager.activeFile != file)
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     Button {
@@ -72,6 +78,7 @@ struct SetDataView: View {
                                         Label("View", systemImage: "eye.fill")
                                     }
                                     .tint(.yellow)
+                                    .disabled(!stateManager.connected)
                                 }
                         }
                     }
@@ -89,7 +96,10 @@ struct SetDataView: View {
                         }, label: {
                             Text("Login")
                         })
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                        .disabled(!stateManager.connected)
+                        .foregroundColor(
+                            !stateManager.connected ? Color.gray : (colorScheme == .dark ? Color.white : Color.black)
+                        )
                     } else {
                         Button(action: {
                             self.showCreateActionSheet.toggle()
@@ -104,8 +114,10 @@ struct SetDataView: View {
                                 Text("Create List")
                             }
                         })
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-
+                            .disabled(!stateManager.connected)
+                            .foregroundColor(
+                                !stateManager.connected ? Color.gray : (colorScheme == .dark ? Color.white : Color.black)
+                            )
                         Button(action: {
                             self.stateManager.logOut()
                         }, label: {

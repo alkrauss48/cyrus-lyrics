@@ -27,10 +27,11 @@ struct HowItWorksView: View {
                             .frame(minWidth: 0, maxWidth: .infinity)
                             .padding()
                             .foregroundColor(.white)
-                            .background(Color("Primary"))
+                            .background(!stateManager.connected ? Color.gray : Color("Primary"))
                             .cornerRadius(40)
                     }
                 }.padding()
+                    .disabled(!stateManager.connected)
             }.navigationTitle("How It Works")
 
     }
