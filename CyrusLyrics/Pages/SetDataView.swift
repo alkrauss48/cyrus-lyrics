@@ -17,6 +17,15 @@ struct SetDataView: View {
     var body: some View {
         NavigationView {
             List {
+                if (!stateManager.connected) {
+                    Text("You are Offline")
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding(10)
+                        .foregroundColor(.white)
+                        .background(Color.red)
+                        .cornerRadius(10)
+                }
+                
                 if (stateManager.userFiles.count > 0) {
                     Section(header: Text("Your Lists")) {
                         ForEach(stateManager.userFiles, id: \.self) { file in
