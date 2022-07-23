@@ -63,6 +63,6 @@ struct LinkDetailView: View {
 
 //struct LinkDetailView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        LinkDetailView()
+//        LinkDetailView(shuffleType: nil, shuffleId: nil)
 //    }
 //}

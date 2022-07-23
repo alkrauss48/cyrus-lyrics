@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct HowItWorksView: View {
-    let items: [FAQItem] = FAQItem.items
     @Environment(\.openURL) var openURL
     @StateObject var stateManager = StateManager.Get()
 
     var body: some View {
-        NavigationView {
             VStack{
-                List(items, children: \.items) { row in
-                    Text(row.name)
-                        
+                List(FAQItem.items, children: \.items) { row in
+                    Text(row.name).padding(10)
                 }
                 HStack {
                     Button(action: {
@@ -28,23 +25,13 @@ struct HowItWorksView: View {
                             .frame(minWidth: 0, maxWidth: .infinity)
                             .padding()
                             .foregroundColor(.white)
-                            .background(Color("Primary"))
+                            .background(!stateManager.connected ? Color.gray : Color("Primary"))
                             .cornerRadius(40)
                     }
                 }.padding()
-                
-            }
-            .navigationTitle("How It Works")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        stateManager.toggleMenu()
-                    }) {
-                        Image(systemName: "line.horizontal.3")
-                    }
-                }
-            }
-        }
+                    .disabled(!stateManager.connected)
+            }.navigationTitle("How It Works")
+
     }
 }
 

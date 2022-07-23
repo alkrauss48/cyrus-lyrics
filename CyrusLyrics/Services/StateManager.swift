@@ -6,13 +6,18 @@
 //
 
 import Foundation
+import Network
 import SwiftUI
 
 class StateManager: ObservableObject {
     @Environment(\.openURL) var openURL
 
+    let monitor = NWPathMonitor()
+    let queue = DispatchQueue(label: "Monitor")
+    @Published private(set) var connected: Bool = false
+    
     @Published var menuOpen: Bool = false
-    @Published var rootView: String = StateManager.CATEGORY_LIST_VIEW
+    @Published var rootView: String = StateManager.SET_DATA_VIEW
     @Published var oauthQuery: String = ""
     @Published var userFiles: [APIFile] = []
     @Published var defaultFiles: [APIFile] = []
@@ -21,6 +26,7 @@ class StateManager: ObservableObject {
     @Published var isCreatingSheet: Bool = false
     @Published var isDeletingSheet: APIFile?
     @Published var showLoginActionSheet = false
+    @Published var isLoadingFile: Bool = false
     
     var dataAdapter = SheetsV2Adapter()
     var oauthDataAdapter = OAuthSheetAdapter()
@@ -39,6 +45,8 @@ class StateManager: ObservableObject {
     }
     
     init() {
+        checkConnection()
+        
         if let value = UserDefaults.standard.string(forKey: "oauthQuery") {
             self.oauthQuery = value
         }
@@ -66,10 +74,17 @@ class StateManager: ObservableObject {
         
         // Load up the active file
         if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
-            let isUserFile = self.userFiles.contains(storedActiveFile)
-
-            setActiveFile(file: storedActiveFile, isUserFile: isUserFile)
+            setActiveFile(file: storedActiveFile)
         }
+    }
+    
+    func checkConnection() {
+        monitor.pathUpdateHandler = { path in
+            DispatchQueue.main.async {
+                self.connected = path.status == .satisfied ? true : false
+            }
+        }
+        monitor.start(queue: queue)
     }
     
     func setOauthQuery(value: String) {
@@ -91,10 +106,14 @@ class StateManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "oauthQuery")
     }
     
-    func setActiveFile(file: APIFile, isUserFile: Bool = false) -> Void {
+    func setActiveFile(file: APIFile) -> Void {
+        if (self.activeFile != file) {
+            self.isLoadingFile = true;
+        }
+        
         self.activeFile = file
         
-        if (isUserFile) {
+        if (self.isUserFile()) {
             self.getActiveSheetData()
         } else {
             self.queryAppData()
@@ -250,6 +269,10 @@ class StateManager: ObservableObject {
             } catch let responseError {
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
+            
+            DispatchQueue.main.async {
+                self.isLoadingFile = false
+            }
         }
     }
   
@@ -270,11 +293,13 @@ class StateManager: ObservableObject {
         makeRequest(url: requestUrl, method: "GET") { data in
             // Convert HTTP Response Data to a simple String
             if let dataString = String(data: data, encoding: .utf8) {
-                print("Response data string:\n \(dataString)")
                 let categories = self.dataAdapter.parseCategories(data: dataString)
                 self.parseAppData(categories: categories)
             }
-        }
+            
+            DispatchQueue.main.async {
+                self.isLoadingFile = false
+            }        }
     }
     
     func parseAppData(categories: [AppCategory]) {

@@ -17,28 +17,28 @@ struct SetDataView: View {
     var body: some View {
         NavigationView {
             List {
+                if (!stateManager.connected) {
+                    Text("You are Offline")
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding(10)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .listRowBackground(Color.red)
+                }
+                
                 if (stateManager.userFiles.count > 0) {
                     Section(header: Text("Your Lists")) {
                         ForEach(stateManager.userFiles, id: \.self) { file in
-                            Button(action: {
-                                stateManager.setActiveFile(file: file, isUserFile: true)
-                            }, label: {
-                                if (stateManager.isDeletingSheet == file) {
-                                    HStack {
-                                        Text(file.name)
+                            NavigationLink(destination: CategoryList(file: file)) {
+                                HStack {
+                                    Text(file.name)
+                                    if (stateManager.isDeletingSheet == file) {
                                         Spacer()
                                         ProgressView()
                                     }
-                                } else if (stateManager.activeFile == file) {
-                                    HStack {
-                                        Text(file.name)
-                                        Spacer()
-                                        Image(systemName: "checkmark")
-                                    }
-                                } else {
-                                    Text(file.name)
                                 }
-                            })
+                            }
+                                .disabled(!stateManager.connected && stateManager.activeFile != file)
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
@@ -47,6 +47,7 @@ struct SetDataView: View {
                                         } label: {
                                             Label("Edit", systemImage: "square.and.pencil")
                                         }
+                                        .disabled(!stateManager.connected)
                                         .tint(.blue)
                                     } else {
                                         Button {
@@ -54,16 +55,18 @@ struct SetDataView: View {
                                         } label: {
                                             Label("View", systemImage: "eye.fill")
                                         }
+                                        .disabled(!stateManager.connected)
                                         .tint(.yellow)
                                     }
                                     
                                     Button(role: .destructive) {
                                         isConfirming = true
                                         self.selectedFileToDelete = file
-                                        print("foobar")
                                     } label: {
                                         Label("Delete", systemImage: "trash.fill")
                                     }
+                                    .disabled(!stateManager.connected)
+
                                 }
                         }
                     }
@@ -71,19 +74,10 @@ struct SetDataView: View {
                 if (stateManager.defaultFiles.count > 0) {
                     Section(header: Text("Preloaded Lists")) {
                         ForEach(stateManager.defaultFiles, id: \.self) { file in
-                            Button(action: {
-                                stateManager.setActiveFile(file: file)
-                            }, label: {
-                                if (stateManager.activeFile == file) {
-                                    HStack {
-                                        Text(file.name)
-                                        Spacer()
-                                        Image(systemName: "checkmark")
-                                    }
-                                } else {
-                                    Text(file.name)
-                                }
-                            })
+                            NavigationLink(destination: CategoryList(file: file)) {
+                                Text(file.name)
+                            }
+                            .disabled(!stateManager.connected && stateManager.activeFile != file)
                                 .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                                 .swipeActions {
                                     Button {
@@ -92,6 +86,7 @@ struct SetDataView: View {
                                         Label("View", systemImage: "eye.fill")
                                     }
                                     .tint(.yellow)
+                                    .disabled(!stateManager.connected)
                                 }
                         }
                     }
@@ -109,7 +104,10 @@ struct SetDataView: View {
                         }, label: {
                             Text("Login")
                         })
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                        .disabled(!stateManager.connected)
+                        .foregroundColor(
+                            !stateManager.connected ? Color.gray : (colorScheme == .dark ? Color.white : Color.black)
+                        )
                     } else {
                         Button(action: {
                             self.showCreateActionSheet.toggle()
@@ -124,8 +122,10 @@ struct SetDataView: View {
                                 Text("Create List")
                             }
                         })
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
-
+                            .disabled(!stateManager.connected)
+                            .foregroundColor(
+                                !stateManager.connected ? Color.gray : (colorScheme == .dark ? Color.white : Color.black)
+                            )
                         Button(action: {
                             self.stateManager.logOut()
                         }, label: {
@@ -133,6 +133,12 @@ struct SetDataView: View {
                         })
                             .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
 
+                    }
+                }
+                
+                Section(header: Text("About")) {
+                    NavigationLink(destination: HowItWorksView()) {
+                        Text("How It Works")
                     }
                 }
            }
@@ -158,16 +164,7 @@ struct SetDataView: View {
                 stateManager.listDefaultSheets()
                 stateManager.listUserSheets()
             }
-            .navigationTitle("Change List")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        stateManager.toggleMenu()
-                    }) {
-                        Image(systemName: "line.horizontal.3")
-                    }
-                }
-            }
+            .navigationTitle("CyrusLyrics")
         }
         .sheet(isPresented: $showCreateActionSheet) {
             SheetView()
@@ -216,7 +213,6 @@ struct SheetView: View {
                 }
             }
             .onAppear {
-                print("on appear")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {  /// Anything over 0.5 seems to work
                     sheetNameFieldIsFocused = .sheetNameField
                  }
