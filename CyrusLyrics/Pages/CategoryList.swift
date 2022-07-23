@@ -54,10 +54,9 @@ struct CategoryList: View {
                                     .background(!stateManager.connected ? Color.gray : Color("Primary"))
                                     .cornerRadius(40)
                             }
-                        }.padding()
-                            .disabled(!stateManager.connected)
-
-                        
+                        }
+                        .padding()
+                        .disabled(!stateManager.connected)
                     } else {
                         HStack {
                             Text("Download the Google Sheets app to add songs to your list.")
