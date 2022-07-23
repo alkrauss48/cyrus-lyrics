@@ -270,7 +270,9 @@ class StateManager: ObservableObject {
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
             }
             
-            self.isLoadingFile = false
+            DispatchQueue.main.async {
+                self.isLoadingFile = false
+            }
         }
     }
   
@@ -291,13 +293,13 @@ class StateManager: ObservableObject {
         makeRequest(url: requestUrl, method: "GET") { data in
             // Convert HTTP Response Data to a simple String
             if let dataString = String(data: data, encoding: .utf8) {
-                print("Response data string:\n \(dataString)")
                 let categories = self.dataAdapter.parseCategories(data: dataString)
                 self.parseAppData(categories: categories)
             }
             
-            self.isLoadingFile = false
-        }
+            DispatchQueue.main.async {
+                self.isLoadingFile = false
+            }        }
     }
     
     func parseAppData(categories: [AppCategory]) {

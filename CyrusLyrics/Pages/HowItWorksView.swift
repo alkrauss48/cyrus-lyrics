@@ -8,15 +8,13 @@
 import SwiftUI
 
 struct HowItWorksView: View {
-    let items: [FAQItem] = FAQItem.items
     @Environment(\.openURL) var openURL
     @StateObject var stateManager = StateManager.Get()
 
     var body: some View {
             VStack{
-                List(items, children: \.items) { row in
-                    Text(row.name)
-                        .padding(10)
+                List(FAQItem.items, children: \.items) { row in
+                    Text(row.name).padding(10)
                 }
                 HStack {
                     Button(action: {

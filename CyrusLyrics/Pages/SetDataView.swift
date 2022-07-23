@@ -22,8 +22,8 @@ struct SetDataView: View {
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding(10)
                         .foregroundColor(.white)
-                        .background(Color.red)
                         .cornerRadius(10)
+                        .listRowBackground(Color.red)
                 }
                 
                 if (stateManager.userFiles.count > 0) {
@@ -62,7 +62,6 @@ struct SetDataView: View {
                                     Button(role: .destructive) {
                                         isConfirming = true
                                         self.selectedFileToDelete = file
-                                        print("foobar")
                                     } label: {
                                         Label("Delete", systemImage: "trash.fill")
                                     }
@@ -214,7 +213,6 @@ struct SheetView: View {
                 }
             }
             .onAppear {
-                print("on appear")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {  /// Anything over 0.5 seems to work
                     sheetNameFieldIsFocused = .sheetNameField
                  }
