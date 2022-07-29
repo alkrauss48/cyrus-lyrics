@@ -18,7 +18,7 @@ class StateManager: ObservableObject {
     
     @Published var menuOpen: Bool = false
     @Published var rootView: String = StateManager.SET_DATA_VIEW
-    @Published var oauthQuery: String = ""
+    @Published var oauthToken: String = ""
     @Published var userFiles: [APIFile] = []
     @Published var defaultFiles: [APIFile] = []
     @Published var categories = [AppCategory]()
@@ -36,7 +36,7 @@ class StateManager: ObservableObject {
     static var HOW_IT_WORKS_VIEW = "HOW_IT_WORKS_VIEW"
     
     static var BASE_API_URL = "https://api.cyruskrauss.com"
-//    static var BASE_API_URL = "https://a652-72-211-8-17.ngrok.io"
+//    static var BASE_API_URL = "https://ccf2-72-211-8-17.ngrok.io"
 
     static var stateManager = StateManager()
     
@@ -48,7 +48,7 @@ class StateManager: ObservableObject {
         checkConnection()
         
         if let value = UserDefaults.standard.string(forKey: "oauthQuery") {
-            self.oauthQuery = value
+            self.oauthToken = value
         }
         
         // Load up the default files
@@ -88,7 +88,7 @@ class StateManager: ObservableObject {
     }
     
     func setOauthQuery(value: String) {
-        self.oauthQuery = value
+        self.oauthToken = value
         UserDefaults.standard.set(value, forKey: "oauthQuery")
     }
     
@@ -98,7 +98,7 @@ class StateManager: ObservableObject {
                 self.setActiveFile(file: self.defaultFiles[0])
             }
             
-            self.oauthQuery = ""
+            self.oauthToken = ""
             self.userFiles = []
         }
         
@@ -151,7 +151,7 @@ class StateManager: ObservableObject {
     }
     
     func isLoggedIn() -> Bool {
-        return !self.oauthQuery.isEmpty
+        return !self.oauthToken.isEmpty
     }
     
     func authUrl() -> URL {
@@ -173,7 +173,7 @@ class StateManager: ObservableObject {
     func createSheetUrl(title: String) -> Void {
         let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
         
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?title=\(encodedTitle!)&" + self.oauthQuery)
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?title=\(encodedTitle!)")
         
         guard let fullRequestUrl = requestUrl else {
             return
@@ -187,7 +187,7 @@ class StateManager: ObservableObject {
     }
 
     func deleteFile(file: APIFile) -> Void {
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(file.id)?" + self.oauthQuery)!
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(file.id)")!
         
         self.isDeletingSheet = file
         makeRequest(url: requestUrl, method: "DELETE") { data in
@@ -207,7 +207,7 @@ class StateManager: ObservableObject {
     }
     
     func listUserSheets() -> Void {
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?" + self.oauthQuery)!
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets")!
         
         makeRequest(url: requestUrl, method: "GET") { data in
             do {
@@ -258,7 +258,7 @@ class StateManager: ObservableObject {
             return
         }
                 
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(activeSheet.id)?" + self.oauthQuery)!
+        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(activeSheet.id)")!
         
         // TODO: Update this route
         makeRequest(url: requestUrl, method: "GET") { data in
@@ -326,6 +326,7 @@ class StateManager: ObservableObject {
     private func makeRequest(url: URL, method: String, callback: @escaping (Data) -> ()) {
         var request = URLRequest(url: url)
         request.httpMethod = method
+        request.setValue("Bearer " + self.oauthToken, forHTTPHeaderField: "Authorization")
         
         // Create the session object
         let session = URLSession.shared
