@@ -227,6 +227,7 @@ class StateManager: ObservableObject {
                 
                 UserDefaults.standard.removeObject(forKey: "userFiles")
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+                self.logOut()
             }
         }
     }
@@ -260,7 +261,6 @@ class StateManager: ObservableObject {
                 
         let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(activeSheet.id)")!
         
-        // TODO: Update this route
         makeRequest(url: requestUrl, method: "GET") { data in
             do {
                 let result = try JSONDecoder().decode(APIGetSheetResponse.self, from: data)
@@ -268,6 +268,7 @@ class StateManager: ObservableObject {
                 self.parseAppData(categories: categories)
             } catch let responseError {
                 print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+                self.logOut()
             }
             
             DispatchQueue.main.async {
