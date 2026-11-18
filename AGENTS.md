@@ -7,7 +7,7 @@ Guidance for AI coding agents (Claude Code, Codex, Cursor, Copilot, etc.) workin
 CyrusLyrics is a small **SwiftUI iOS app** (iPhone + iPad) for quickly finding song lyrics while singing. Songs are organized as **Category → Sub-category → Song** (in practice, Genre → Artist → Song). The data lives in **Google Sheets**, and a few preloaded lists ship by default. Signed-in users can create and manage their own lists.
 
 - Language: Swift 5, SwiftUI. No UIKit app delegate. The entry point is `CyrusLyrics/CyrusLyricsApp.swift`.
-- Deployment target: iOS 15.0 (the app target's setting; the project-level setting of 14.4 is overridden).
+- Deployment target: iOS 15.0.
 - Bundle ID: `com.cyruskrauss.cyruslyrics`. URL scheme: `cyruslyrics://`.
 - **No third-party dependencies**: no SPM, CocoaPods, or Carthage. Keeping it that way is a product goal, because the in-app FAQ promises "no external plugins". Don't add a package without asking.
 - **No tests or test target** exist yet.
