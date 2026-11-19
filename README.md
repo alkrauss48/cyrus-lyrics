@@ -1,101 +1,139 @@
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
-***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** github_username, repo_name, twitter_handle, email, project_title, project_description
--->
-
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-
-
-<!-- PROJECT LOGO -->
-<br />
 <p align="center">
-  <a href="https://github.com/alkrauss48/cyrus-lyrics">
-    <img src="https://thecodeboss.dev/wp-content/uploads/2021/08/cl-1.jpeg" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">CyrusLyrics</h3>
-
-  <p align="center">
-    A simple iOS app that I built to help me quickly find the lyrics to songs as
-    I sang to my son. And it just got bigger from there.
-    <br />
-    <br />
-    <a href="https://github.com/alkrauss48/cyrus-lyrics">View Demo</a>
-    ·
-    <a href="https://github.com/alkrauss48/cyrus-lyrics/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/alkrauss48/cyrus-lyrics/issues">Request Feature</a>
-  </p>
+  <img src="https://thecodeboss.dev/wp-content/uploads/2021/08/cl-1.jpeg" alt="CyrusLyrics logo" width="80" height="80">
 </p>
 
+<h3 align="center">CyrusLyrics</h3>
 
+<p align="center">
+  A simple iOS app that I built to help me quickly find the lyrics to songs as
+  I sang to my son. And it just got bigger from there.
+  <br />
+  <br />
+  <a href="https://github.com/alkrauss48/cyrus-lyrics/issues">Report Bug</a>
+  ·
+  <a href="https://github.com/alkrauss48/cyrus-lyrics/issues">Request Feature</a>
+</p>
 
-<!-- TABLE OF CONTENTS -->
-<details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
-  <ol>
-    <li><a href="#built-with">Built With</a></li>
-    <li><a href="#installation">Installation</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
+## Contents
 
+- [About](#about)
+- [Built With](#built-with)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [How the Data Works](#how-the-data-works)
+- [AI-Assisted Development](#ai-assisted-development)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
+## About
 
+CyrusLyrics organizes songs as **Genre → Artist → Song** and shows each song's lyrics in-app. It also links out to Spotify and can shuffle a random song at any level. The app ships with a few preloaded lists. Signed-in users can create their own lists, and those lists are stored as Google Sheets in their own Google account.
 
-### Built With
+Features:
 
-* Swift / SwiftUI
+- Browse songs by category and sub-category, and pull to refresh
+- Lyrics from a Google search, a custom URL, or lyrics you paste in yourself
+- Shuffle across all songs, one genre, or one artist
+- Open songs in Spotify
+- Sign in with Google to create, edit, and delete your own lists
+- Offline support for the last selected list (cached on the device)
+
+## Built With
+
+- Swift 5 / SwiftUI
+- iOS 15.0+ (iPhone and iPad)
+- No third-party dependencies
+- [Google Sheets](https://www.google.com/sheets/about/) as the data store
+- A companion backend API (`api.cyruskrauss.com`, not in this repo) that handles Google OAuth and access to user-owned sheets
+
+## Getting Started
+
+### Prerequisites
+
+- macOS with [Xcode](https://developer.apple.com/xcode/) installed (Xcode 13 or newer for iOS 15 SDK support)
 
 ### Installation
 
-1. Clone the repo
+1. Clone the repo:
    ```sh
    git clone https://github.com/alkrauss48/cyrus-lyrics.git
    ```
-2. Run it in XCode
+2. Open `CyrusLyrics.xcodeproj` in Xcode.
+3. Select an iOS simulator or device and run.
 
-There are no packages that you need to install.
+There are no packages to install.
 
-<!-- CONTRIBUTING -->
+### Command-line build
+
+```sh
+xcodebuild -project CyrusLyrics.xcodeproj -target CyrusLyrics \
+  -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
+```
+
+You need a full Xcode install selected with `sudo xcode-select -s /Applications/Xcode.app`. The Command Line Tools alone aren't enough.
+
+### Running on a device
+
+The project's signing team is the maintainer's. To run it on your own device, change the **Team** (and the bundle identifier if needed) under *Signing & Capabilities* in Xcode. Don't commit that change.
+
+## Project Structure
+
+```
+CyrusLyrics/
+  CyrusLyricsApp.swift   App entry point and OAuth callback handling
+  Pages/                 Screen-level views (SetDataView is the home screen)
+  Components/            Reusable views (lyrics, Spotify button, web views)
+  Services/              StateManager (app state + networking), ShuffleManager,
+                         and DataAdapters that parse Google Sheet data
+  Protocols/             Adapter protocols
+  Structs/               Data models, API/Sheet response models, FAQ content
+  Utilities/             Small helpers
+```
+
+## How the Data Works
+
+Each list is a Google Sheet with a header row and these six columns:
+
+| Column | Name        | Required | Purpose                                               |
+| ------ | ----------- | -------- | ----------------------------------------------------- |
+| A      | Category    | Yes      | Top-level grouping (e.g. genre)                       |
+| B      | Sub-category| Yes      | Second-level grouping (e.g. artist)                   |
+| C      | Song        | Yes      | Song name                                             |
+| D      | URL         | No       | Overrides the default Google lyrics search            |
+| E      | Lyrics      | No       | Custom lyrics, shown directly and available offline   |
+| F      | Spotify URL | No       | Enables the "open in Spotify" button                  |
+
+Preloaded lists are read from Google's public sheet endpoint. User lists are read and managed through the backend API using the user's Google OAuth token.
+
+## AI-Assisted Development
+
+This repo is set up for AI coding agents:
+
+- [`AGENTS.md`](AGENTS.md): the main guide for agents. It covers architecture, conventions, build commands, and gotchas, such as adding new Swift files to `project.pbxproj`.
+- [`CLAUDE.md`](CLAUDE.md): Claude Code entry point. It imports `AGENTS.md`.
+- `.editorconfig`: shared formatting basics for editors and agents.
+
+Put personal agent settings in `.claude/settings.local.json` and personal notes in `CLAUDE.local.md`. Git ignores both.
+
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are welcome!
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the project.
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push the branch (`git push origin feature/AmazingFeature`).
+5. Open a pull request.
 
-<!-- LICENSE -->
+Please keep the app free of third-party dependencies, and read [`AGENTS.md`](AGENTS.md) for project conventions.
+
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
-
-
-<!-- CONTACT -->
 ## Contact
 
 [Aaron Krauss - Personal Site](https://thecodeboss.dev)
 
-Project Link: [https://github.com/alkrauss48/cyrus-lyrics](https://github.com/alkrauss48/cyrus-lyrics)
+Project link: [https://github.com/alkrauss48/cyrus-lyrics](https://github.com/alkrauss48/cyrus-lyrics)

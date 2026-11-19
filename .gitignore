@@ -4,6 +4,15 @@
 
 # Xcode User settings
 xcuserdata/
+*.xcuserstate
+
+# Xcode build output
+build/
+DerivedData/
+*.xcarchive
+*.ipa
+*.dSYM.zip
+*.dSYM
 
 # Swift Package Manager
 Packages/
@@ -12,3 +21,11 @@ Package.resolved
 
 # Pods
 Pods/
+
+# Local environment / secrets
+.env
+.env.*
+
+# AI tooling (personal, uncommitted)
+.claude/settings.local.json
+CLAUDE.local.md
