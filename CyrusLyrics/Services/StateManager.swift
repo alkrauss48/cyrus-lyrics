@@ -7,452 +7,353 @@
 
 import Foundation
 import Network
-import SwiftUI
+import Observation
+import OSLog
 
-enum RequestError: Error {
-    case transport(Error)
-    case noData
-    case http(statusCode: Int)
+/// App-wide state: the available lists, the songs in the active list, and
+/// sign-in.
+///
+/// Everything is cached in `LocalStore`, so the last active list keeps
+/// working offline. Network errors and 5xx responses keep the cached data.
+/// Responses that mean the token is no longer valid sign the user out.
+@MainActor
+@Observable
+final class StateManager {
+    private(set) var isConnected = true
+    private(set) var defaultFiles: [APIFile] = []
+    private(set) var userFiles: [APIFile] = []
+    private(set) var activeFile: APIFile?
+    private(set) var categories: [AppCategory] = []
+    private(set) var isLoadingFile = false
+    private(set) var isCreatingSheet = false
+    private(set) var deletingFile: APIFile?
+    private var oauthToken: String?
 
-    /// Client errors (4xx) mean the token is invalid or the resource is gone,
-    /// so the app treats them like an auth failure. Server errors (5xx) and
-    /// network problems are treated as transient.
-    var isClientError: Bool {
-        if case .http(let statusCode) = self {
-            return (400..<500).contains(statusCode)
-        }
+    @ObservationIgnored private let api: APIClient
+    @ObservationIgnored private let store: LocalStore
+    @ObservationIgnored private let tokenStore: TokenStore
+    @ObservationIgnored private let monitor = NWPathMonitor()
+    @ObservationIgnored private var loadTask: Task<Void, Never>?
+    @ObservationIgnored private var loadedFileID: APIFile.ID?
+    @ObservationIgnored private var hasStarted = false
 
-        return false
+    init(api: APIClient = APIClient(), store: LocalStore = LocalStore(), tokenStore: TokenStore = TokenStore()) {
+        self.api = api
+        self.store = store
+        self.tokenStore = tokenStore
+
+        migrateToken()
+        oauthToken = tokenStore.load()
+
+        defaultFiles = store.load([APIFile].self, for: .defaultFiles) ?? []
+        if oauthToken != nil {
+            userFiles = store.load([APIFile].self, for: .userFiles) ?? []
+        }
+        activeFile = store.load(APIFile.self, for: .activeFile)
+        categories = store.load([AppCategory].self, for: .categories)?.sortedByName() ?? []
     }
 
-    var isUnauthorized: Bool {
-        if case .http(let statusCode) = self {
-            return statusCode == 401 || statusCode == 403
-        }
-
-        return false
+    var isLoggedIn: Bool {
+        oauthToken != nil
     }
 
-    var isNotFound: Bool {
-        if case .http(let statusCode) = self {
-            return statusCode == 404
-        }
+    var signInURL: URL {
+        api.signInURL
+    }
 
-        return false
-    }
-}
-
-class StateManager: ObservableObject {
-    let monitor = NWPathMonitor()
-    let queue = DispatchQueue(label: "Monitor")
-    @Published private(set) var connected: Bool = false
-    
-    @Published var menuOpen: Bool = false
-    @Published var rootView: String = StateManager.SET_DATA_VIEW
-    @Published var oauthToken: String = ""
-    @Published var userFiles: [APIFile] = []
-    @Published var defaultFiles: [APIFile] = []
-    @Published var categories = [AppCategory]()
-    @Published var activeFile: APIFile?
-    @Published var isCreatingSheet: Bool = false
-    @Published var isDeletingSheet: APIFile?
-    @Published var showLoginActionSheet = false
-    @Published var isLoadingFile: Bool = false
-    
-    var dataAdapter = SheetsV2Adapter()
-    var oauthDataAdapter = OAuthSheetAdapter()
-    
-    static var CATEGORY_LIST_VIEW = "CATEGORY_LIST_VIEW"
-    static var SET_DATA_VIEW = "SET_DATA_VIEW"
-    static var HOW_IT_WORKS_VIEW = "HOW_IT_WORKS_VIEW"
-    
-    static var BASE_API_URL = "https://api.cyruskrauss.com"
-//    static var BASE_API_URL = "https://ccf2-72-211-8-17.ngrok.io"
-
-    static var stateManager = StateManager()
-    
-    static func Get() -> StateManager {
-        return self.stateManager
-    }
-    
-    init() {
-        checkConnection()
-        
-        if let value = UserDefaults.standard.string(forKey: "oauthQuery") {
-            self.oauthToken = value
-        }
-        
-        // Load up the default files
-        if let defaultFiles = deserializeStoredValueAs(key: "defaultFiles", type: [APIFile].self) {
-            self.defaultFiles = defaultFiles
-        } else {
-            listDefaultSheets()
-        }
-        
-        // Load up the user's files, if logged in
-        if (self.isLoggedIn()) {
-            if let userFiles = deserializeStoredValueAs(key: "userFiles", type: [APIFile].self) {
-                self.userFiles = userFiles
-            } else {
-                listUserSheets()
-            }
-        }
-        
-        // Load up app categories
-        if let categories = deserializeStoredValueAs(key: "categories", type: [AppCategory].self) {
-            setCategories(newCategories: categories)
-        }
-        
-        // Load up the active file
-        if let storedActiveFile = deserializeStoredValueAs(key: "activeFile", type: APIFile.self) {
-            setActiveFile(file: storedActiveFile)
-        }
-    }
-    
-    func checkConnection() {
-        monitor.pathUpdateHandler = { path in
-            DispatchQueue.main.async {
-                self.connected = path.status == .satisfied ? true : false
-            }
-        }
-        monitor.start(queue: queue)
-    }
-    
-    func setOauthQuery(value: String) {
-        self.oauthToken = value
-        UserDefaults.standard.set(value, forKey: "oauthQuery")
-    }
-    
-    func logOut() -> Void {
-        DispatchQueue.main.async {
-            if let activeFile = self.activeFile, self.userFiles.contains(activeFile) {
-                self.resetActiveFileToDefault()
-            }
-            
-            self.oauthToken = ""
-            self.userFiles = []
-        }
-        
-        UserDefaults.standard.removeObject(forKey: "userFiles")
-        UserDefaults.standard.removeObject(forKey: "oauthQuery")
-    }
-    
-    func setActiveFile(file: APIFile) -> Void {
-        if (self.activeFile != file) {
-            self.isLoadingFile = true;
-        }
-        
-        self.activeFile = file
-        
-        if (self.isUserFile()) {
-            self.getActiveSheetData()
-        } else {
-            self.queryAppData()
-        }
-        
-        UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
-    }
-    
-    /// Switch to the first preloaded list, or clear the active list if the
-    /// preloaded lists haven't loaded yet (e.g. first launch while offline).
-    private func resetActiveFileToDefault() {
-        if let defaultFile = self.defaultFiles.first {
-            self.setActiveFile(file: defaultFile)
-            return
-        }
-
-        self.activeFile = nil
-        self.categories = []
-        UserDefaults.standard.removeObject(forKey: "activeFile")
-        UserDefaults.standard.removeObject(forKey: "categories")
-    }
-    
-    func refreshList() {
-        if (self.activeFile == nil) {
-            return
-        }
-        
-        if (self.isUserFile()) {
-            self.getActiveSheetData()
-        } else {
-            self.queryAppData()
-        }
-    }
-    
-    func isUserFile() -> Bool {
-        guard let activeFile = self.activeFile else {
+    /// Whether the active list belongs to the user, as opposed to being one
+    /// of the preloaded lists.
+    var isUserFile: Bool {
+        guard let activeFile else {
             return false
         }
-        
-        if (self.defaultFiles.contains(activeFile)) {
-            return false
-        }
-        
-        return true
-    }
-    
-    func toggleMenu() {
-        self.menuOpen.toggle()
-    }
-    
-    func isLoggedIn() -> Bool {
-        return !self.oauthToken.isEmpty
-    }
-    
-    func authUrl() -> URL {
-        return URL(string: StateManager.BASE_API_URL + "/oauth/google")!
-    }
-    
-    func activeFileUrl() -> URL {
-        guard let activeFile = self.activeFile else {
-            return URL(string: "googlesheets://")!
-        }
 
-        return sheetsAppUrl(for: activeFile)
+        return !defaultFiles.contains(activeFile)
     }
-    
-    private func sheetsAppUrl(for file: APIFile) -> URL {
-        return URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(file.id)")!
-    }
-    
-    func viewFile(file: APIFile) {
-        UIApplication.shared.open(URL(string: "https://docs.google.com/spreadsheets/d/\(file.id)")!)
-    }
-    
-    func editFile(file: APIFile) {
-        UIApplication.shared.open(sheetsAppUrl(for: file))
-    }
-    
-    func createSheetUrl(title: String) -> Void {
-        guard let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics),
-              let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?title=\(encodedTitle)") else {
+
+    /// Starts watching the network connection and refreshes all data. Safe to
+    /// call more than once.
+    func start() async {
+        guard !hasStarted else {
             return
         }
-        
-        self.isCreatingSheet = true
-        makeRequest(url: requestUrl, method: "POST") { result in
-            switch result {
-            case .success:
-                // Reload the user's sheets, which also clears isCreatingSheet
-                self.listUserSheets()
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.isCreatingSheet = false
-                }
 
-                if error.isUnauthorized {
-                    self.logOut()
-                }
+        hasStarted = true
+        startMonitoringConnection()
+
+        if activeFile != nil {
+            reloadActiveFile()
+        }
+
+        await refreshLists()
+    }
+
+    // MARK: - Lists
+
+    func refreshLists() async {
+        async let defaultFiles: Void = refreshDefaultFiles()
+        async let userFiles: Void = refreshUserFiles()
+        _ = await (defaultFiles, userFiles)
+    }
+
+    private func refreshDefaultFiles() async {
+        do throws(RequestError) {
+            let files = try await api.listDefaultFiles()
+            defaultFiles = files
+            store.save(files, for: .defaultFiles)
+
+            if activeFile == nil, let firstFile = files.first {
+                open(firstFile)
+            }
+        } catch {
+            // Keep the cached lists
+        }
+    }
+
+    private func refreshUserFiles() async {
+        guard let token = oauthToken else {
+            return
+        }
+
+        do throws(RequestError) {
+            let files = try await api.listUserFiles(token: token)
+
+            // Ignore the response if the user signed out while it was loading
+            guard oauthToken == token else {
+                return
+            }
+
+            userFiles = files.sorted(byName: \.name)
+            store.save(userFiles, for: .userFiles)
+        } catch {
+            if error.invalidatesSession, oauthToken == token {
+                signOut()
             }
         }
     }
 
-    func deleteFile(file: APIFile) -> Void {
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(file.id)")!
-        
-        self.isDeletingSheet = file
-        makeRequest(url: requestUrl, method: "DELETE") { result in
-            DispatchQueue.main.async {
-                self.isDeletingSheet = nil
+    func createSheet(title: String) async {
+        guard let token = oauthToken else {
+            return
+        }
 
-                if case .failure(let error) = result, !error.isNotFound {
-                    if error.isUnauthorized {
-                        self.logOut()
-                    }
+        isCreatingSheet = true
+        defer { isCreatingSheet = false }
 
+        do throws(RequestError) {
+            try await api.createSheet(title: title, token: token)
+            await refreshUserFiles()
+        } catch {
+            if error.isUnauthorized {
+                signOut()
+            }
+        }
+    }
+
+    func delete(_ file: APIFile) async {
+        guard let token = oauthToken else {
+            return
+        }
+
+        deletingFile = file
+        defer { deletingFile = nil }
+
+        do throws(RequestError) {
+            try await api.deleteSheet(id: file.id, token: token)
+        } catch {
+            if error.isUnauthorized {
+                signOut()
+            }
+
+            // A 404 means the sheet is already gone, so remove it below
+            guard error.isNotFound else {
+                return
+            }
+        }
+
+        userFiles.removeAll { $0.id == file.id }
+        store.save(userFiles, for: .userFiles)
+
+        if activeFile?.id == file.id {
+            resetActiveFileToDefault()
+        }
+    }
+
+    // MARK: - Active list
+
+    /// Makes `file` the active list and loads its songs, unless they've
+    /// already loaded since launch. Pull to refresh reloads them.
+    func open(_ file: APIFile) {
+        if file == activeFile {
+            if loadedFileID != file.id && loadTask == nil {
+                reloadActiveFile()
+            }
+
+            return
+        }
+
+        activeFile = file
+        store.save(file, for: .activeFile)
+
+        // The cached songs belong to the previous list
+        categories = []
+        store.remove(.categories)
+        loadedFileID = nil
+        isLoadingFile = true
+
+        reloadActiveFile()
+    }
+
+    /// Reloads the active list's songs and waits until they've loaded.
+    func refreshActiveFile() async {
+        await reloadActiveFile().value
+    }
+
+    @discardableResult
+    private func reloadActiveFile() -> Task<Void, Never> {
+        loadTask?.cancel()
+
+        let task = Task {
+            await loadActiveFile()
+        }
+
+        loadTask = task
+        return task
+    }
+
+    private func loadActiveFile() async {
+        guard let file = activeFile else {
+            isLoadingFile = false
+            return
+        }
+
+        defer {
+            // If a newer load replaced this one, that load owns these
+            if !Task.isCancelled {
+                isLoadingFile = false
+                loadTask = nil
+            }
+        }
+
+        let rows: [[String?]]
+
+        if isUserFile {
+            guard let token = oauthToken else {
+                return
+            }
+
+            do throws(RequestError) {
+                rows = SheetParser.rows(fromAPIValues: try await api.sheetValues(id: file.id, token: token))
+            } catch {
+                if !Task.isCancelled, error.invalidatesSession, oauthToken == token {
+                    signOut()
+                }
+
+                return
+            }
+        } else {
+            do throws(RequestError) {
+                let response = try await api.publicSheet(file)
+
+                guard let parsedRows = SheetParser.rows(fromGvizResponse: response) else {
+                    Logger.network.error("Unexpected response format for \(file.id, privacy: .public)")
                     return
                 }
 
-                // Deleted, or already gone (404)
-                self.userFiles.removeAll { $0.id == file.id }
-                if (self.activeFile?.id == file.id) {
-                    self.resetActiveFileToDefault()
-                }
-                UserDefaults.standard.set(try? PropertyListEncoder().encode(self.userFiles), forKey:"userFiles")
-            }
-        }
-    }
-    
-    func listUserSheets() -> Void {
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets")!
-        
-        makeRequest(url: requestUrl, method: "GET") { result in
-            defer {
-                DispatchQueue.main.async {
-                    self.isCreatingSheet = false
-                }
-            }
-
-            switch result {
-            case .success(let data):
-                do {
-                    let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
-                    DispatchQueue.main.async {
-                        self.userFiles = result.files.sorted { $0.name < $1.name }
-                    }
-                    
-                    UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
-                } catch let responseError {
-                    // A successful response we can't decode means the token is no longer valid
-                    print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
-                    self.logOut()
-                }
-            case .failure(let error):
-                // Keep the cached lists on network or server errors
-                if error.isClientError {
-                    self.logOut()
-                }
-            }
-        }
-    }
-    
-    func listDefaultSheets() -> Void {
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/default")!
-        
-        makeRequest(url: requestUrl, method: "GET") { result in
-            guard case .success(let data) = result else {
+                rows = parsedRows
+            } catch {
                 return
             }
-
-            do {
-                let result = try JSONDecoder().decode([APIFile].self, from: data)
-                
-                DispatchQueue.main.async {
-                    self.defaultFiles = result
-                    
-                    if (self.activeFile == nil && !result.isEmpty) {
-                        self.setActiveFile(file: result.first!)
-                    }
-                }
-                
-                UserDefaults.standard.set(try? PropertyListEncoder().encode(result), forKey:"defaultFiles")
-            } catch let responseError {
-                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
-            }
         }
-    }
-    
-    func getActiveSheetData() -> Void {
-        guard let activeSheet = self.activeFile else {
+
+        guard !Task.isCancelled, activeFile == file else {
             return
         }
-                
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(activeSheet.id)")!
-        
-        makeRequest(url: requestUrl, method: "GET") { result in
-            defer {
-                DispatchQueue.main.async {
-                    self.isLoadingFile = false
-                }
-            }
 
-            switch result {
-            case .success(let data):
-                do {
-                    let result = try JSONDecoder().decode(APIGetSheetResponse.self, from: data)
-                    let categories = self.oauthDataAdapter.processData(rows: result.values)
-                    self.parseAppData(categories: categories)
-                } catch let responseError {
-                    // A successful response we can't decode means the token is no longer valid
-                    print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
-                    self.logOut()
-                }
-            case .failure(let error):
-                // Keep the cached categories on network or server errors
-                if error.isClientError {
-                    self.logOut()
-                }
-            }
-        }
-    }
-  
-    func setCategories(newCategories: [AppCategory]) {
-        // Publish the categories so the main thread and view will trigger UI updates
-        DispatchQueue.main.async {
-            self.categories = newCategories
-        }
+        categories = SheetParser.categories(fromRows: rows)
+        loadedFileID = file.id
+        store.save(categories, for: .categories)
     }
 
-    func queryAppData() -> Void {
-        guard let file = self.activeFile else {
+    /// Switches to the first preloaded list, or clears the active list if the
+    /// preloaded lists haven't loaded yet (for example, on a first launch
+    /// while offline).
+    private func resetActiveFileToDefault() {
+        if let defaultFile = defaultFiles.first {
+            open(defaultFile)
             return
         }
-        
-        let requestUrl = URL(string: dataAdapter.getDataUrl(sheetId: file.id))!
-        
-        makeRequest(url: requestUrl, method: "GET") { result in
-            // Convert HTTP Response Data to a simple String. If the response
-            // can't be parsed, keep the cached categories for offline use.
-            if case .success(let data) = result,
-               let dataString = String(data: data, encoding: .utf8),
-               let categories = self.dataAdapter.parseCategories(data: dataString) {
-                self.parseAppData(categories: categories)
+
+        loadTask?.cancel()
+        loadTask = nil
+        activeFile = nil
+        categories = []
+        loadedFileID = nil
+        isLoadingFile = false
+        store.remove(.activeFile)
+        store.remove(.categories)
+    }
+
+    // MARK: - Sign-in
+
+    /// Finishes sign-in with the backend's `cyruslyrics://...?token=<token>`
+    /// redirect.
+    func signIn(callbackURL: URL) async {
+        let token = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false)?
+            .queryItems?
+            .first { $0.name == "token" }?
+            .value
+
+        guard let token, !token.isEmpty else {
+            Logger.auth.error("Sign-in callback didn't include a token")
+            return
+        }
+
+        oauthToken = token
+        tokenStore.save(token)
+        await refreshUserFiles()
+    }
+
+    func signOut() {
+        if isUserFile {
+            resetActiveFileToDefault()
+        }
+
+        oauthToken = nil
+        userFiles = []
+        tokenStore.delete()
+        store.remove(.userFiles)
+    }
+
+    /// Moves the token from UserDefaults, where versions 2.1 and earlier kept
+    /// it, to the Keychain. Also clears a token left in the Keychain by a
+    /// previous install, since deleting the app doesn't erase the Keychain.
+    private func migrateToken() {
+        if !store.bool(for: .hasLaunched) {
+            tokenStore.delete()
+            store.set(true, for: .hasLaunched)
+        }
+
+        if let legacyToken = store.string(for: .legacyOAuthToken) {
+            if !legacyToken.isEmpty {
+                tokenStore.save(legacyToken)
             }
-            
-            DispatchQueue.main.async {
-                self.isLoadingFile = false
-            }
+
+            store.remove(.legacyOAuthToken)
         }
     }
-    
-    func parseAppData(categories: [AppCategory]) {
 
-        // Sort the categories by name
-        let sortedCategories = categories.sorted { $0.name < $1.name }
-        
-        setCategories(newCategories: sortedCategories)
-        
-        // Save the categories in UserDefaults
-        UserDefaults.standard.set(try? PropertyListEncoder().encode(sortedCategories), forKey:"categories")
-    }
-    
-    private func deserializeStoredValueAs<T: Decodable>(key: String, type: T.Type) -> T? {
-        if let data = UserDefaults.standard.value(forKey: key) as? Data {
-            let decodedValue = try? PropertyListDecoder().decode(type, from: data)
+    // MARK: - Connection
 
-            return decodedValue
-        }
-        
-        return nil;
-    }
-    
-    private func makeRequest(url: URL, method: String, callback: @escaping (Result<Data, RequestError>) -> ()) {
-        var request = URLRequest(url: url)
-        request.httpMethod = method
+    private func startMonitoringConnection() {
+        monitor.pathUpdateHandler = { @Sendable [weak self] path in
+            let isConnected = path.status == .satisfied
 
-        // Only send the token to our own backend, not to third parties like Google
-        if url.host == URL(string: StateManager.BASE_API_URL)?.host {
-            request.setValue("Bearer " + self.oauthToken, forHTTPHeaderField: "Authorization")
-        }
-        
-        // Create the session object
-        let session = URLSession.shared
-        
-        // Create a task using the session object, to run and return completion handler
-        let webTask = session.dataTask(with: request) {data, response, error in
-            if let error = error {
-                print(error.localizedDescription)
-                callback(.failure(.transport(error)))
-                return
+            Task { @MainActor in
+                self?.isConnected = isConnected
             }
-
-            if let httpResponse = response as? HTTPURLResponse,
-               !(200..<300).contains(httpResponse.statusCode) {
-                print("Request to \(url.path) failed with status \(httpResponse.statusCode)")
-                callback(.failure(.http(statusCode: httpResponse.statusCode)))
-                return
-            }
-
-            guard let serverData = data else {
-                print("server data error")
-                callback(.failure(.noData))
-                return
-            }
-            
-            callback(.success(serverData))
         }
 
-        // Run the task
-        webTask.resume()
+        monitor.start(queue: DispatchQueue(label: "com.cyruskrauss.cyruslyrics.connection"))
     }
 }

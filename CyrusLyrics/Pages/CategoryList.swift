@@ -7,78 +7,66 @@
 
 import SwiftUI
 
+/// The categories in a list.
 struct CategoryList: View {
-    @Environment(\.openURL) var openURL
-    @StateObject var stateManager = StateManager.Get()
+    @Environment(StateManager.self) private var stateManager
     let file: APIFile
-    
+
     var body: some View {
-            VStack {
-                if (stateManager.isLoadingFile) {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                } else {
-                    List {
-                        Section() {
-                            if (stateManager.categories.isEmpty) {
-                                if (stateManager.activeFile != nil && UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
-                                    Text("Your list is empty. Click the button below to add songs.")
-                                        .padding([.bottom, .top], 10)
-                                } else {
-                                    Text("Your list is empty.")
-                                        .padding([.bottom, .top], 10)
-                                }
-                            }
-                            
-                            ForEach(stateManager.categories, id: \.id) { category in
-                                NavigationLink(destination: CategoryDetailView(category: category)) {
-                                    Text(category.name)
-                                }
-                            }
-                        }
-                    }.listStyle(InsetGroupedListStyle())
+        VStack(spacing: 0) {
+            List(stateManager.categories) { category in
+                NavigationLink(category.name) {
+                    CategoryDetailView(category: category)
                 }
-                
-                if (stateManager.isUserFile()) {
-                    if (UIApplication.shared.canOpenURL(stateManager.activeFileUrl())) {
-                        HStack {
-                            Button(action: {
-                                openURL(stateManager.activeFileUrl())
-                            }) {
-                                Text("Add Songs")
-                                    .fontWeight(.semibold)
-                                    .frame(minWidth: 0, maxWidth: .infinity)
-                                    .padding()
-                                    .foregroundColor(.white)
-                                    .background(!stateManager.connected ? Color.gray : Color("Primary"))
-                                    .cornerRadius(40)
-                            }
+            }
+            .listStyle(.insetGrouped)
+            .overlay {
+                if stateManager.isLoadingFile {
+                    ProgressView()
+                } else if stateManager.categories.isEmpty {
+                    ContentUnavailableView {
+                        Label("Your List Is Empty", systemImage: "music.note.list")
+                    } description: {
+                        if canAddSongs {
+                            Text("Tap Add Songs to add songs to your list.")
                         }
-                        .padding()
-                        .disabled(!stateManager.connected)
-                    } else {
-                        HStack {
-                            Text("Download the Google Sheets app to add songs to your list.")
-                        }.padding()
                     }
                 }
             }
-            .onAppear() {
-                stateManager.setActiveFile(file: file)
-            }
             .refreshable {
-                stateManager.refreshList()
+                await stateManager.refreshActiveFile()
             }
-            .navigationTitle(file.name)
-            .toolbar {
-                ShuffleToolbarItem(type: "all", id: nil, isHidden: stateManager.categories.isEmpty)
+
+            if stateManager.isUserFile {
+                Group {
+                    if canAddSongs, let url = file.sheetsAppURL {
+                        Link("Add Songs", destination: url)
+                            .buttonStyle(.pill)
+                            .disabled(!stateManager.isConnected)
+                    } else {
+                        Text("Download the Google Sheets app to add songs to your list.")
+                    }
+                }
+                .padding()
             }
+        }
+        .navigationTitle(file.name)
+        .toolbar {
+            ShuffleToolbarItem(scope: .all, isHidden: stateManager.categories.isEmpty)
+        }
+        .onAppear {
+            stateManager.open(file)
+        }
+    }
+
+    private var canAddSongs: Bool {
+        stateManager.isUserFile && GoogleSheetsApp.isInstalled
     }
 }
 
-//struct CategoryList_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CategoryList()
-//    }
-//}
+#Preview {
+    NavigationStack {
+        CategoryList(file: .preview)
+    }
+    .environment(StateManager.preview())
+}

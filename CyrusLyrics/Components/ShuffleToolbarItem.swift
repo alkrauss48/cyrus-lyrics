@@ -8,21 +8,16 @@
 import SwiftUI
 
 struct ShuffleToolbarItem: ToolbarContent {
-    let type: String?
-    let id: UUID?
-    var isHidden: Bool
-    
-    init(type: String?, id: UUID?, isHidden: Bool = false) {
-        self.type = type
-        self.id = id
-        self.isHidden = isHidden
-    }
-    
+    let scope: ShuffleScope
+    var isHidden = false
+
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            if (!isHidden) {
-                NavigationLink(destination: LinkDetailView(link: nil, shuffleType: type, shuffleId: id)) {
-                    Image(systemName: "shuffle")
+        ToolbarItem(placement: .topBarTrailing) {
+            if !isHidden {
+                NavigationLink {
+                    LinkDetailView(shuffling: scope)
+                } label: {
+                    Label("Shuffle", systemImage: "shuffle")
                 }
             }
         }

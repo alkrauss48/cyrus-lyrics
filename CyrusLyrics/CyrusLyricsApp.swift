@@ -9,27 +9,21 @@ import SwiftUI
 
 @main
 struct CyrusLyricsApp: App {
+    @State private var stateManager = StateManager()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
+                .environment(stateManager)
+                .task {
+                    await stateManager.start()
+                }
                 .onOpenURL { url in
-                    let stateManager = StateManager.Get()
-                    
-                    DispatchQueue.main.async {
-                        stateManager.showLoginActionSheet = false
-
-                        guard let urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-                            return
-                        }
-
-                        let queryItems = urlComponent.queryItems
-
-                        guard let token = queryItems?.first(where: { $0.name == "token" })?.value else {
-                            return
-                        }
-
-                        stateManager.setOauthQuery(value: token)
-                        stateManager.listUserSheets()
+                    // Sign-in normally finishes inside the web authentication
+                    // session. This handles the callback if iOS opens the app
+                    // with it directly instead.
+                    Task {
+                        await stateManager.signIn(callbackURL: url)
                     }
                 }
         }
