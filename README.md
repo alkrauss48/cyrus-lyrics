@@ -41,8 +41,9 @@ Features:
 
 ## Built With
 
-- Swift 5 / SwiftUI
-- iOS 15.0+ (iPhone and iPad)
+- Swift 6 / SwiftUI, with Observation and async/await
+- iOS 17.0+ (iPhone and iPad)
+- Swift Testing for unit tests
 - No third-party dependencies
 - [Google Sheets](https://www.google.com/sheets/about/) as the data store
 - A companion backend API (`api.cyruskrauss.com`, not in this repo) that handles Google OAuth and access to user-owned sheets
@@ -51,7 +52,7 @@ Features:
 
 ### Prerequisites
 
-- macOS with [Xcode](https://developer.apple.com/xcode/) installed (Xcode 13 or newer for iOS 15 SDK support)
+- macOS with [Xcode](https://developer.apple.com/xcode/) 16 or newer installed
 
 ### Installation
 
@@ -64,12 +65,17 @@ Features:
 
 There are no packages to install.
 
-### Command-line build
+### Command-line build and tests
 
 ```sh
 xcodebuild -project CyrusLyrics.xcodeproj -target CyrusLyrics \
   -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
+
+xcodebuild test -project CyrusLyrics.xcodeproj -scheme CyrusLyrics \
+  -destination 'platform=iOS Simulator,name=iPhone 17'
 ```
+
+Replace `iPhone 17` with any simulator from `xcrun simctl list devices available`.
 
 You need a full Xcode install selected with `sudo xcode-select -s /Applications/Xcode.app`. The Command Line Tools alone aren't enough.
 
@@ -81,14 +87,13 @@ The project's signing team is the maintainer's. To run it on your own device, ch
 
 ```
 CyrusLyrics/
-  CyrusLyricsApp.swift   App entry point and OAuth callback handling
-  Pages/                 Screen-level views (SetDataView is the home screen)
-  Components/            Reusable views (lyrics, Spotify button, web views)
-  Services/              StateManager (app state + networking), ShuffleManager,
-                         and DataAdapters that parse Google Sheet data
-  Protocols/             Adapter protocols
-  Structs/               Data models, API/Sheet response models, FAQ content
-  Utilities/             Small helpers
+  CyrusLyricsApp.swift   App entry point
+  Pages/                 Screen-level views (HomeView is the home screen)
+  Components/            Reusable views (lyrics, web view, shuffle button, button style)
+  Services/              StateManager (app state), APIClient (networking),
+                         SheetParser, ShuffleBag, and local/Keychain storage
+  Models/                Data models, API/Sheet response models, FAQ content
+CyrusLyricsTests/        Unit tests (Swift Testing)
 ```
 
 ## How the Data Works
@@ -104,13 +109,13 @@ Each list is a Google Sheet with a header row and these six columns:
 | E      | Lyrics      | No       | Custom lyrics, shown directly and available offline   |
 | F      | Spotify URL | No       | Enables the "open in Spotify" button                  |
 
-Preloaded lists are read from Google's public sheet endpoint. User lists are read and managed through the backend API using the user's Google OAuth token.
+Preloaded lists are read from Google's public sheet endpoint. User lists are read and managed through the backend API using the user's Google OAuth token, which the app keeps in the Keychain.
 
 ## AI-Assisted Development
 
 This repo is set up for AI coding agents:
 
-- [`AGENTS.md`](AGENTS.md): the main guide for agents. It covers architecture, conventions, build commands, and gotchas, such as adding new Swift files to `project.pbxproj`.
+- [`AGENTS.md`](AGENTS.md): the main guide for agents. It covers architecture, conventions, build and test commands, and gotchas.
 - [`CLAUDE.md`](CLAUDE.md): Claude Code entry point. It imports `AGENTS.md`.
 - `.editorconfig`: shared formatting basics for editors and agents.
 
