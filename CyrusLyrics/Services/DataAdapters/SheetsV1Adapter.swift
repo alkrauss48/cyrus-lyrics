@@ -16,7 +16,7 @@ class SheetsV1Adapter: SheetsAdapter {
         return "https://spreadsheets.google.com/feeds/cells/" + sheetId + "/1/public/full?alt=json"
     }
     
-    func parseCategories(data: String!) -> [AppCategory] {
+    func parseCategories(data: String!) -> [AppCategory]? {
         let jsonData = data.data(using: .utf8)!
         let gSheet: GoogleSheetFormat = try! JSONDecoder().decode(GoogleSheetFormat.self, from: jsonData)
 

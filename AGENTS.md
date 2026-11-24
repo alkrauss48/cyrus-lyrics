@@ -34,9 +34,9 @@ CyrusLyrics.xcodeproj/      Xcode project (legacy format, see "Adding files" bel
 ## Architecture notes
 
 - **State**: `StateManager` is a process-wide singleton (`StateManager.Get()`). Views bind to it with `@StateObject var stateManager = StateManager.Get()`. All `@Published` mutations must happen on the main thread; the existing code wraps them in `DispatchQueue.main.async`.
-- **Networking**: `StateManager.makeRequest` uses `URLSession` with completion handlers (not async/await) and sends `Authorization: Bearer <oauthToken>`. Failed decodes of authenticated responses call `logOut()` on purpose.
+- **Networking**: `StateManager.makeRequest` uses `URLSession` with completion handlers (not async/await) and passes a `Result<Data, RequestError>` to the callback. It sends `Authorization: Bearer <oauthToken>` only to `BASE_API_URL`. Callers log out on purpose for 4xx responses, or when a successful authenticated response can't be decoded (delete and create log out only on 401/403). Network errors and 5xx responses keep the user signed in and keep the cached data. Every path clears its loading flag.
 - **Two data paths**:
-  - *Default (preloaded) lists*: fetched directly from Google's public `gviz` endpoint through `SheetsV2Adapter`. It strips a fixed 47-character JSONP prefix and a 2-character suffix from the response before decoding.
+  - *Default (preloaded) lists*: fetched directly from Google's public `gviz` endpoint through `SheetsV2Adapter`. It extracts the JSON between the first `{` and the last `}` of the JSONP response. `parseCategories` returns `nil` when the response can't be parsed, and the caller then keeps the cached categories.
   - *User lists*: fetched from the backend (`/sheets/:id`) and parsed by `OAuthSheetAdapter`.
   - `SheetsV1Adapter` is **deprecated**: Google's old feed API stopped working in August 2021. It's kept only for reference.
 - **Sheet format** (all adapters): row 1 is headers. Columns are `Category | Sub-category | Song name | URL (optional) | Lyrics (optional) | Spotify URL (optional)`. Rows missing any of the first 3 columns are skipped. Without a URL, the app falls back to a Google search, built in `Utilities.getDefaultGoogleUrl`.
@@ -72,4 +72,4 @@ The project has no shared scheme checked in, so use `-target` rather than `-sche
 - `DEVELOPMENT_TEAM` and signing settings belong to the maintainer's Apple account. Don't change them.
 - `Info.plist` declares `LSApplicationQueriesSchemes: googlesheets`, which is required for `canOpenURL` checks on the Google Sheets app, and the `cyruslyrics` URL scheme. Both are load-bearing.
 - The FAQ text in `Structs/FAQStructs.swift` is user-facing copy. Update it when user-visible behavior changes.
-- The code uses force unwraps and `try!` in several places, for example in `SheetsV2Adapter` and `ShuffleManager`. Be careful when touching those paths, but don't refactor them unless the task asks for it.
+- Some force unwraps remain, mostly in views (for example `LinkDetailView`'s `link!`). Be careful when touching those paths, but don't refactor them unless the task asks for it.

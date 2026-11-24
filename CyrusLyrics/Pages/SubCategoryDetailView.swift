@@ -19,7 +19,6 @@ struct SubCategoryDetailView: View {
         }
         .navigationTitle(subCategory.name)
         .toolbar {
-            ToolbarItemHack()
             ShuffleToolbarItem(type: "subCategory", id: subCategory.id)
         }
     }

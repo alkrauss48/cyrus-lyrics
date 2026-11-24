@@ -8,6 +8,6 @@
 import Foundation
 
 protocol SheetsAdapter {
-    func parseCategories(data: String!) -> [AppCategory]
+    func parseCategories(data: String!) -> [AppCategory]?
     func getDataUrl(sheetId: String) -> String
 }

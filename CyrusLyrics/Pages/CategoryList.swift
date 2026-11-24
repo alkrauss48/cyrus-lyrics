@@ -72,7 +72,6 @@ struct CategoryList: View {
             }
             .navigationTitle(file.name)
             .toolbar {
-                ToolbarItemHack()
                 ShuffleToolbarItem(type: "all", id: nil, isHidden: stateManager.categories.isEmpty)
             }
     }

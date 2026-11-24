@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LinkDetailView: View {
-    let shuffleManager = ShuffleManager()
+    @StateObject private var shuffleManager = ShuffleManager()
     @State var link: AppLink?
     let shuffleType: String?
     let shuffleId: UUID?
@@ -22,14 +22,10 @@ struct LinkDetailView: View {
                     LyricsView(lyrics: link!.lyrics)
                 }
                 
-                if (!link!.spotifyUrl.isEmpty) {
-                    let url = URL(string: link!.spotifyUrl)
-                    
-                    if UIApplication.shared.canOpenURL(url!) {
-                        HStack {
-                            SpotifyButton(url: url!)
-                        }.padding()
-                    }
+                if let url = URL(string: link!.spotifyUrl), UIApplication.shared.canOpenURL(url) {
+                    HStack {
+                        SpotifyButton(url: url)
+                    }.padding()
                 }
             }
         }
@@ -38,7 +34,7 @@ struct LinkDetailView: View {
             UIApplication.shared.isIdleTimerDisabled = true
 
             if (link == nil) {
-                link = shuffleManager.shuffleBy(type: shuffleType!, id: shuffleId)
+                link = shuffleManager.shuffleBy(type: shuffleType ?? "all", id: shuffleId)
             } else {
                 shuffleManager.reset()
             }
@@ -47,11 +43,12 @@ struct LinkDetailView: View {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         .toolbar {
-            ToolbarItemHack()
             ToolbarItem(placement: .navigationBarTrailing) {
                 if (shuffleManager.shuffleData != nil) {
                     Button(action: {
-                        link = shuffleManager.next()
+                        if let nextLink = shuffleManager.next() {
+                            link = nextLink
+                        }
                     }) {
                         Image(systemName: "arrow.forward")
                     }

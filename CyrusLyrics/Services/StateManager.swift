@@ -9,9 +9,40 @@ import Foundation
 import Network
 import SwiftUI
 
-class StateManager: ObservableObject {
-    @Environment(\.openURL) var openURL
+enum RequestError: Error {
+    case transport(Error)
+    case noData
+    case http(statusCode: Int)
 
+    /// Client errors (4xx) mean the token is invalid or the resource is gone,
+    /// so the app treats them like an auth failure. Server errors (5xx) and
+    /// network problems are treated as transient.
+    var isClientError: Bool {
+        if case .http(let statusCode) = self {
+            return (400..<500).contains(statusCode)
+        }
+
+        return false
+    }
+
+    var isUnauthorized: Bool {
+        if case .http(let statusCode) = self {
+            return statusCode == 401 || statusCode == 403
+        }
+
+        return false
+    }
+
+    var isNotFound: Bool {
+        if case .http(let statusCode) = self {
+            return statusCode == 404
+        }
+
+        return false
+    }
+}
+
+class StateManager: ObservableObject {
     let monitor = NWPathMonitor()
     let queue = DispatchQueue(label: "Monitor")
     @Published private(set) var connected: Bool = false
@@ -94,8 +125,8 @@ class StateManager: ObservableObject {
     
     func logOut() -> Void {
         DispatchQueue.main.async {
-            if ((self.activeFile != nil) && self.userFiles.contains(self.activeFile!)) {
-                self.setActiveFile(file: self.defaultFiles[0])
+            if let activeFile = self.activeFile, self.userFiles.contains(activeFile) {
+                self.resetActiveFileToDefault()
             }
             
             self.oauthToken = ""
@@ -120,6 +151,20 @@ class StateManager: ObservableObject {
         }
         
         UserDefaults.standard.set(try? PropertyListEncoder().encode(file), forKey:"activeFile")
+    }
+    
+    /// Switch to the first preloaded list, or clear the active list if the
+    /// preloaded lists haven't loaded yet (e.g. first launch while offline).
+    private func resetActiveFileToDefault() {
+        if let defaultFile = self.defaultFiles.first {
+            self.setActiveFile(file: defaultFile)
+            return
+        }
+
+        self.activeFile = nil
+        self.categories = []
+        UserDefaults.standard.removeObject(forKey: "activeFile")
+        UserDefaults.standard.removeObject(forKey: "categories")
     }
     
     func refreshList() {
@@ -159,30 +204,46 @@ class StateManager: ObservableObject {
     }
     
     func activeFileUrl() -> URL {
-        return URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(self.activeFile!.id)")!
+        guard let activeFile = self.activeFile else {
+            return URL(string: "googlesheets://")!
+        }
+
+        return sheetsAppUrl(for: activeFile)
+    }
+    
+    private func sheetsAppUrl(for file: APIFile) -> URL {
+        return URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(file.id)")!
     }
     
     func viewFile(file: APIFile) {
-        openURL(URL(string: "https://docs.google.com/spreadsheets/d/\(file.id)")!)
+        UIApplication.shared.open(URL(string: "https://docs.google.com/spreadsheets/d/\(file.id)")!)
     }
     
     func editFile(file: APIFile) {
-        openURL(URL(string: "Googlesheets://https://docs.google.com/spreadsheets/d/\(file.id)")!)
+        UIApplication.shared.open(sheetsAppUrl(for: file))
     }
     
     func createSheetUrl(title: String) -> Void {
-        let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics)
-        
-        let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?title=\(encodedTitle!)")
-        
-        guard let fullRequestUrl = requestUrl else {
+        guard let encodedTitle = title.addingPercentEncoding(withAllowedCharacters: .alphanumerics),
+              let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets?title=\(encodedTitle)") else {
             return
         }
         
         self.isCreatingSheet = true
-        makeRequest(url: fullRequestUrl, method: "POST") { data in
-            // Reload the user's sheets
-            self.listUserSheets()
+        makeRequest(url: requestUrl, method: "POST") { result in
+            switch result {
+            case .success:
+                // Reload the user's sheets, which also clears isCreatingSheet
+                self.listUserSheets()
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.isCreatingSheet = false
+                }
+
+                if error.isUnauthorized {
+                    self.logOut()
+                }
+            }
         }
     }
 
@@ -190,17 +251,23 @@ class StateManager: ObservableObject {
         let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(file.id)")!
         
         self.isDeletingSheet = file
-        makeRequest(url: requestUrl, method: "DELETE") { data in
-            guard let index = (self.userFiles.firstIndex{ $0.id == file.id }) else {
-                return
-            }
-            
+        makeRequest(url: requestUrl, method: "DELETE") { result in
             DispatchQueue.main.async {
-                self.userFiles.remove(at: index)
-                if (self.activeFile != nil && self.activeFile!.id == file.id) {
-                    self.setActiveFile(file: self.defaultFiles[0])
-                }
                 self.isDeletingSheet = nil
+
+                if case .failure(let error) = result, !error.isNotFound {
+                    if error.isUnauthorized {
+                        self.logOut()
+                    }
+
+                    return
+                }
+
+                // Deleted, or already gone (404)
+                self.userFiles.removeAll { $0.id == file.id }
+                if (self.activeFile?.id == file.id) {
+                    self.resetActiveFileToDefault()
+                }
                 UserDefaults.standard.set(try? PropertyListEncoder().encode(self.userFiles), forKey:"userFiles")
             }
         }
@@ -209,25 +276,32 @@ class StateManager: ObservableObject {
     func listUserSheets() -> Void {
         let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets")!
         
-        makeRequest(url: requestUrl, method: "GET") { data in
-            do {
-                let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
+        makeRequest(url: requestUrl, method: "GET") { result in
+            defer {
                 DispatchQueue.main.async {
-                    self.userFiles = result.files.sorted { $0.name < $1.name }
                     self.isCreatingSheet = false
                 }
-                
-                UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
-            } catch let responseError {
-                DispatchQueue.main.async {
-                    self.userFiles = []
-                    self.isCreatingSheet = false
+            }
 
+            switch result {
+            case .success(let data):
+                do {
+                    let result = try JSONDecoder().decode(APIListFilesResponse.self, from: data)
+                    DispatchQueue.main.async {
+                        self.userFiles = result.files.sorted { $0.name < $1.name }
+                    }
+                    
+                    UserDefaults.standard.set(try? PropertyListEncoder().encode(result.files), forKey:"userFiles")
+                } catch let responseError {
+                    // A successful response we can't decode means the token is no longer valid
+                    print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+                    self.logOut()
                 }
-                
-                UserDefaults.standard.removeObject(forKey: "userFiles")
-                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
-                self.logOut()
+            case .failure(let error):
+                // Keep the cached lists on network or server errors
+                if error.isClientError {
+                    self.logOut()
+                }
             }
         }
     }
@@ -235,7 +309,11 @@ class StateManager: ObservableObject {
     func listDefaultSheets() -> Void {
         let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/default")!
         
-        makeRequest(url: requestUrl, method: "GET") { data in
+        makeRequest(url: requestUrl, method: "GET") { result in
+            guard case .success(let data) = result else {
+                return
+            }
+
             do {
                 let result = try JSONDecoder().decode([APIFile].self, from: data)
                 
@@ -261,18 +339,29 @@ class StateManager: ObservableObject {
                 
         let requestUrl = URL(string: StateManager.BASE_API_URL + "/sheets/\(activeSheet.id)")!
         
-        makeRequest(url: requestUrl, method: "GET") { data in
-            do {
-                let result = try JSONDecoder().decode(APIGetSheetResponse.self, from: data)
-                let categories = self.oauthDataAdapter.processData(rows: result.values)
-                self.parseAppData(categories: categories)
-            } catch let responseError {
-                print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
-                self.logOut()
+        makeRequest(url: requestUrl, method: "GET") { result in
+            defer {
+                DispatchQueue.main.async {
+                    self.isLoadingFile = false
+                }
             }
-            
-            DispatchQueue.main.async {
-                self.isLoadingFile = false
+
+            switch result {
+            case .success(let data):
+                do {
+                    let result = try JSONDecoder().decode(APIGetSheetResponse.self, from: data)
+                    let categories = self.oauthDataAdapter.processData(rows: result.values)
+                    self.parseAppData(categories: categories)
+                } catch let responseError {
+                    // A successful response we can't decode means the token is no longer valid
+                    print("Serialisation in error in creating response body: \(responseError.localizedDescription)")
+                    self.logOut()
+                }
+            case .failure(let error):
+                // Keep the cached categories on network or server errors
+                if error.isClientError {
+                    self.logOut()
+                }
             }
         }
     }
@@ -291,16 +380,19 @@ class StateManager: ObservableObject {
         
         let requestUrl = URL(string: dataAdapter.getDataUrl(sheetId: file.id))!
         
-        makeRequest(url: requestUrl, method: "GET") { data in
-            // Convert HTTP Response Data to a simple String
-            if let dataString = String(data: data, encoding: .utf8) {
-                let categories = self.dataAdapter.parseCategories(data: dataString)
+        makeRequest(url: requestUrl, method: "GET") { result in
+            // Convert HTTP Response Data to a simple String. If the response
+            // can't be parsed, keep the cached categories for offline use.
+            if case .success(let data) = result,
+               let dataString = String(data: data, encoding: .utf8),
+               let categories = self.dataAdapter.parseCategories(data: dataString) {
                 self.parseAppData(categories: categories)
             }
             
             DispatchQueue.main.async {
                 self.isLoadingFile = false
-            }        }
+            }
+        }
     }
     
     func parseAppData(categories: [AppCategory]) {
@@ -324,26 +416,40 @@ class StateManager: ObservableObject {
         return nil;
     }
     
-    private func makeRequest(url: URL, method: String, callback: @escaping (Data) -> ()) {
+    private func makeRequest(url: URL, method: String, callback: @escaping (Result<Data, RequestError>) -> ()) {
         var request = URLRequest(url: url)
         request.httpMethod = method
-        request.setValue("Bearer " + self.oauthToken, forHTTPHeaderField: "Authorization")
+
+        // Only send the token to our own backend, not to third parties like Google
+        if url.host == URL(string: StateManager.BASE_API_URL)?.host {
+            request.setValue("Bearer " + self.oauthToken, forHTTPHeaderField: "Authorization")
+        }
         
         // Create the session object
         let session = URLSession.shared
         
         // Create a task using the session object, to run and return completion handler
-        let webTask = session.dataTask(with: request) {data, response, error in            
-            guard error == nil else {
-                print(error?.localizedDescription ?? "Response Error")
+        let webTask = session.dataTask(with: request) {data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                callback(.failure(.transport(error)))
                 return
             }
+
+            if let httpResponse = response as? HTTPURLResponse,
+               !(200..<300).contains(httpResponse.statusCode) {
+                print("Request to \(url.path) failed with status \(httpResponse.statusCode)")
+                callback(.failure(.http(statusCode: httpResponse.statusCode)))
+                return
+            }
+
             guard let serverData = data else {
                 print("server data error")
+                callback(.failure(.noData))
                 return
             }
             
-            callback(serverData)
+            callback(.success(serverData))
         }
 
         // Run the task
