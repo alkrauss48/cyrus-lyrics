@@ -75,6 +75,10 @@ struct LinkDetailView: View {
             }
         } else if shuffleBag?.isEmpty == true {
             ContentUnavailableView("No Songs to Shuffle", systemImage: "shuffle")
+        } else {
+            // Shuffle picks its first song in onAppear, which SwiftUI only
+            // calls when there's a view on screen, so this can't be empty.
+            Color.clear
         }
     }
 }
