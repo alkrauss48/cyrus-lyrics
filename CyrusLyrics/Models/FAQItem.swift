@@ -1,5 +1,5 @@
 //
-//  FAQStructs.swift
+//  FAQItem.swift
 //  CyrusLyrics
 //
 //  Created by Aaron Krauss on 2/18/22.
@@ -7,12 +7,15 @@
 
 import Foundation
 
-struct FAQItem: Identifiable {
+/// A question on the How It Works page. Its children are the answer.
+///
+/// This is user-facing copy. Update it when user-visible behavior changes.
+struct FAQItem: Identifiable, Sendable {
     let id = UUID()
     let name: String
     var items: [FAQItem]?
 
-    static let items = [
+    static let all = [
         FAQItem(name: "What is CyrusLyrics?", items: [
             FAQItem(name: "Welcome! This app is about helping you quickly store, find, and add the lyrics of songs that you like to sing.")
         ]),

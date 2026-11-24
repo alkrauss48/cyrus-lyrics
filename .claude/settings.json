@@ -1,0 +1,11 @@
+{
+    "permissions": {
+      "allow": [
+        "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)",
+        "Bash(git show:*)", "Bash(git branch:*)",
+        "Bash(xcodebuild -list:*)", "Bash(xcodebuild -version)",
+        "Bash(xcodebuild -project CyrusLyrics.xcodeproj -target CyrusLyrics -sdk iphonesimulator:*)",
+        "Bash(xcrun simctl list:*)", "Bash(plutil -lint:*)"
+      ]
+    }
+  }

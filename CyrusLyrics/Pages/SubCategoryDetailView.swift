@@ -1,5 +1,5 @@
 //
-//  CategoryDetailView.swift
+//  SubCategoryDetailView.swift
 //  CyrusLyrics
 //
 //  Created by Aaron Krauss on 6/18/21.
@@ -7,26 +7,29 @@
 
 import SwiftUI
 
+/// The songs in a sub-category.
 struct SubCategoryDetailView: View {
-    @StateObject var stateManager = StateManager.Get()
-    var subCategory: AppSubCategory
+    @Environment(StateManager.self) private var stateManager
+    let subCategory: AppSubCategory
 
     var body: some View {
-        List(subCategory.links.sorted { $0.name < $1.name }, id: \.id) { link in
-            NavigationLink(destination: LinkDetailView(link: link, shuffleType: nil, shuffleId: nil)) {
-                Text(link.name)
-            }.disabled(!stateManager.connected && link.lyrics.isEmpty)
+        List(subCategory.links) { link in
+            NavigationLink(link.name) {
+                LinkDetailView(link: link)
+            }
+            // Offline, only songs with lyrics saved in the sheet work
+            .disabled(!stateManager.isConnected && !link.hasSavedLyrics)
         }
         .navigationTitle(subCategory.name)
         .toolbar {
-            ToolbarItemHack()
-            ShuffleToolbarItem(type: "subCategory", id: subCategory.id)
+            ShuffleToolbarItem(scope: .subCategory(subCategory.id))
         }
     }
 }
 
-//struct SubCategoryDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SubCategoryDetailView()
-//    }
-//}
+#Preview {
+    NavigationStack {
+        SubCategoryDetailView(subCategory: AppCategory.samples[0].subCategories[0])
+    }
+    .environment(StateManager.preview())
+}

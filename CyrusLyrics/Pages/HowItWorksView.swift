@@ -1,5 +1,5 @@
 //
-//  CategoryList.swift
+//  HowItWorksView.swift
 //  CyrusLyrics
 //
 //  Created by Aaron Krauss on 2/18/22.
@@ -8,35 +8,29 @@
 import SwiftUI
 
 struct HowItWorksView: View {
-    @Environment(\.openURL) var openURL
-    @StateObject var stateManager = StateManager.Get()
+    private static let tutorialsURL = URL(string: "https://www.youtube.com/playlist?list=PLWXp2X5PBDOmFd1kqyYsPtYwdgXIfDZT3")!
+
+    @Environment(StateManager.self) private var stateManager
 
     var body: some View {
-            VStack{
-                List(FAQItem.items, children: \.items) { row in
-                    Text(row.name).padding(10)
-                }
-                HStack {
-                    Button(action: {
-                        openURL(URL(string: "https://www.youtube.com/playlist?list=PLWXp2X5PBDOmFd1kqyYsPtYwdgXIfDZT3")!)
-                    }) {
-                        Text("View Tutorials")
-                            .fontWeight(.semibold)
-                            .frame(minWidth: 0, maxWidth: .infinity)
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(!stateManager.connected ? Color.gray : Color("Primary"))
-                            .cornerRadius(40)
-                    }
-                }.padding()
-                    .disabled(!stateManager.connected)
-            }.navigationTitle("How It Works")
+        VStack(spacing: 0) {
+            List(FAQItem.all, children: \.items) { item in
+                Text(item.name)
+                    .padding(.vertical, 10)
+            }
 
+            Link("View Tutorials", destination: Self.tutorialsURL)
+                .buttonStyle(.pill)
+                .disabled(!stateManager.isConnected)
+                .padding()
+        }
+        .navigationTitle("How It Works")
     }
 }
 
-struct HowItWorksView_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    NavigationStack {
         HowItWorksView()
     }
+    .environment(StateManager.preview())
 }

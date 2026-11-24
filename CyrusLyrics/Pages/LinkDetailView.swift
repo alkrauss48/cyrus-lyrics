@@ -7,62 +7,92 @@
 
 import SwiftUI
 
+/// A song's lyrics. When shuffling, a toolbar button moves to the next song.
 struct LinkDetailView: View {
-    let shuffleManager = ShuffleManager()
-    @State var link: AppLink?
-    let shuffleType: String?
-    let shuffleId: UUID?
-    
-    var body: some View {
-        VStack {
-            if link != nil {
-                if link!.lyrics.isEmpty {
-                    SwiftUIWebView(url: URL(string: link!.url))
-                } else {
-                    LyricsView(lyrics: link!.lyrics)
-                }
-                
-                if (!link!.spotifyUrl.isEmpty) {
-                    let url = URL(string: link!.spotifyUrl)
-                    
-                    if UIApplication.shared.canOpenURL(url!) {
-                        HStack {
-                            SpotifyButton(url: url!)
-                        }.padding()
-                    }
-                }
-            }
-        }
-        .navigationBarTitle(link != nil ? link!.name : "", displayMode: .inline)
-        .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true
+    @Environment(StateManager.self) private var stateManager
+    @State private var link: AppLink?
+    @State private var shuffleBag: ShuffleBag<AppLink>?
+    private let shuffleScope: ShuffleScope?
 
-            if (link == nil) {
-                link = shuffleManager.shuffleBy(type: shuffleType!, id: shuffleId)
-            } else {
-                shuffleManager.reset()
-            }
-        }
-        .onDisappear() {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
-        .toolbar {
-            ToolbarItemHack()
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if (shuffleManager.shuffleData != nil) {
-                    Button(action: {
-                        link = shuffleManager.next()
-                    }) {
-                        Image(systemName: "arrow.forward")
+    init(link: AppLink) {
+        _link = State(initialValue: link)
+        shuffleScope = nil
+    }
+
+    init(shuffling scope: ShuffleScope) {
+        shuffleScope = scope
+    }
+
+    var body: some View {
+        content
+            .navigationTitle(link?.name ?? "")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if shuffleBag != nil {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Next Song", systemImage: "arrow.forward") {
+                            link = shuffleBag?.next() ?? link
+                        }
                     }
                 }
             }
+            .onAppear {
+                // Keep the screen on while singing
+                UIApplication.shared.isIdleTimerDisabled = true
+
+                if let shuffleScope, shuffleBag == nil {
+                    var bag = ShuffleBag(stateManager.categories.links(in: shuffleScope))
+                    link = bag.next()
+                    shuffleBag = bag
+                }
+            }
+            .onDisappear {
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        if let link {
+            VStack(spacing: 0) {
+                if link.hasSavedLyrics {
+                    LyricsView(lyrics: link.lyrics)
+                } else if !stateManager.isConnected {
+                    ContentUnavailableView(
+                        "You Are Offline",
+                        systemImage: "wifi.slash",
+                        description: Text("Add this song's lyrics to your Google Sheet to see them offline.")
+                    )
+                } else {
+                    WebView(url: link.lyricsURL)
+                }
+
+                if let url = link.spotifyURL, UIApplication.shared.canOpenURL(url) {
+                    Link("Open in Spotify", destination: url)
+                        .buttonStyle(.pill(.spotify))
+                        .padding()
+                }
+            }
+        } else if shuffleBag?.isEmpty == true {
+            ContentUnavailableView("No Songs to Shuffle", systemImage: "shuffle")
+        } else {
+            // Shuffle picks its first song in onAppear, which SwiftUI only
+            // calls when there's a view on screen, so this can't be empty.
+            Color.clear
         }
     }
 }
 
-//struct LinkDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        LinkDetailView(shuffleType: nil, shuffleId: nil)
-//    }
-//}
+#Preview("Lyrics") {
+    NavigationStack {
+        LinkDetailView(link: AppCategory.samples[0].subCategories[0].links[0])
+    }
+    .environment(StateManager.preview())
+}
+
+#Preview("Shuffle") {
+    NavigationStack {
+        LinkDetailView(shuffling: .all)
+    }
+    .environment(StateManager.preview())
+}

@@ -7,24 +7,26 @@
 
 import SwiftUI
 
+/// The sub-categories in a category.
 struct CategoryDetailView: View {
-    var category: AppCategory
+    let category: AppCategory
 
     var body: some View {
-        List(category.subCategories.sorted { $0.name < $1.name }, id: \.id) { subCategory in
-            NavigationLink(destination: SubCategoryDetailView(subCategory: subCategory)) {
-                Text(subCategory.name)
+        List(category.subCategories) { subCategory in
+            NavigationLink(subCategory.name) {
+                SubCategoryDetailView(subCategory: subCategory)
             }
         }
         .navigationTitle(category.name)
         .toolbar {
-            ShuffleToolbarItem(type: "category", id: category.id)
+            ShuffleToolbarItem(scope: .category(category.id))
         }
     }
 }
 
-//struct CategoryDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CategoryDetailView()
-//    }
-//}
+#Preview {
+    NavigationStack {
+        CategoryDetailView(category: AppCategory.samples[0])
+    }
+    .environment(StateManager.preview())
+}

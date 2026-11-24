@@ -9,17 +9,17 @@ import SwiftUI
 
 struct LyricsView: View {
     let lyrics: String
-    
+
     var body: some View {
         ScrollView {
             Text(lyrics)
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
         }
     }
 }
 
-struct LyricsView_Previews: PreviewProvider {
-    static var previews: some View {
-        LyricsView(lyrics: "Fancy Lyrics")
-    }
+#Preview {
+    LyricsView(lyrics: "Fancy lyrics\nOn more than one line")
 }
