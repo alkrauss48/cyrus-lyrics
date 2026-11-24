@@ -3,66 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		DD01D8BB26E7838500A657F8 /* SheetsV1Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01D8BA26E7838500A657F8 /* SheetsV1Adapter.swift */; };
-		DD01D8BF26E7846500A657F8 /* getDefaultGoogleUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01D8BE26E7846500A657F8 /* getDefaultGoogleUrl.swift */; };
-		DD01D8C126E7854400A657F8 /* SheetsV2Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01D8C026E7854400A657F8 /* SheetsV2Adapter.swift */; };
-		DD01D8C426E789A800A657F8 /* SheetsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD01D8C326E789A800A657F8 /* SheetsAdapter.swift */; };
-		DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD084C17268948ED009CF586 /* SpotifyButton.swift */; };
-		DD109A2E27B1DA8A0079F61D /* CategoryList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A2D27B1DA890079F61D /* CategoryList.swift */; };
-		DD109A3027B1FCBE0079F61D /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A2F27B1FCBE0079F61D /* StateManager.swift */; };
-		DD109A3227B22E2E0079F61D /* SetDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A3127B22E2E0079F61D /* SetDataView.swift */; };
-		DD109A3427B557B70079F61D /* APIResponseStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD109A3327B557B70079F61D /* APIResponseStructs.swift */; };
-		DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */; };
-		DD50F189267CB85B0024D448 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F188267CB85B0024D448 /* ContentView.swift */; };
-		DD50F18B267CB85C0024D448 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18A267CB85C0024D448 /* Assets.xcassets */; };
-		DD50F18E267CB85C0024D448 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */; };
-		DD50F197267CB8DF0024D448 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F196267CB8DF0024D448 /* WebView.swift */; };
-		DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F199267CBE9B0024D448 /* LinkDetailView.swift */; };
-		DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A1267D08E00024D448 /* GSheetStructs.swift */; };
-		DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1A6267D08F60024D448 /* AppDataStructs.swift */; };
-		DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1AB267D31870024D448 /* CategoryDetailView.swift */; };
-		DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */; };
-		DD70B38827C006CF0092F915 /* HowItWorksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD70B38727C006CF0092F915 /* HowItWorksView.swift */; };
-		DD70B38A27C0076C0092F915 /* FAQStructs.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD70B38927C0076C0092F915 /* FAQStructs.swift */; };
-		DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */; };
-		DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */; };
-		DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9D4F102684AB1700AF67CE /* LyricsView.swift */; };
-		DDCAF73A27BE115C00C7C24C /* OAuthSheetAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCAF73927BE115C00C7C24C /* OAuthSheetAdapter.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		DD01D8BA26E7838500A657F8 /* SheetsV1Adapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsV1Adapter.swift; sourceTree = "<group>"; };
-		DD01D8BE26E7846500A657F8 /* getDefaultGoogleUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = getDefaultGoogleUrl.swift; sourceTree = "<group>"; };
-		DD01D8C026E7854400A657F8 /* SheetsV2Adapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsV2Adapter.swift; sourceTree = "<group>"; };
-		DD01D8C326E789A800A657F8 /* SheetsAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsAdapter.swift; sourceTree = "<group>"; };
-		DD084C17268948ED009CF586 /* SpotifyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyButton.swift; sourceTree = "<group>"; };
-		DD109A2D27B1DA890079F61D /* CategoryList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryList.swift; sourceTree = "<group>"; };
-		DD109A2F27B1FCBE0079F61D /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
-		DD109A3127B22E2E0079F61D /* SetDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDataView.swift; sourceTree = "<group>"; };
-		DD109A3327B557B70079F61D /* APIResponseStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResponseStructs.swift; sourceTree = "<group>"; };
 		DD50F183267CB85B0024D448 /* CyrusLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrusLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyrusLyricsApp.swift; sourceTree = "<group>"; };
-		DD50F188267CB85B0024D448 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		DD50F18A267CB85C0024D448 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		DD50F18F267CB85C0024D448 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DD50F196267CB8DF0024D448 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
-		DD50F199267CBE9B0024D448 /* LinkDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkDetailView.swift; sourceTree = "<group>"; };
-		DD50F1A1267D08E00024D448 /* GSheetStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GSheetStructs.swift; sourceTree = "<group>"; };
-		DD50F1A6267D08F60024D448 /* AppDataStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataStructs.swift; sourceTree = "<group>"; };
-		DD50F1AB267D31870024D448 /* CategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDetailView.swift; sourceTree = "<group>"; };
-		DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCategoryDetailView.swift; sourceTree = "<group>"; };
-		DD70B38727C006CF0092F915 /* HowItWorksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowItWorksView.swift; sourceTree = "<group>"; };
-		DD70B38927C0076C0092F915 /* FAQStructs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAQStructs.swift; sourceTree = "<group>"; };
-		DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleManager.swift; sourceTree = "<group>"; };
-		DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShuffleToolbarItem.swift; sourceTree = "<group>"; };
-		DD9D4F102684AB1700AF67CE /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
-		DDCAF73927BE115C00C7C24C /* OAuthSheetAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthSheetAdapter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DD046B8EDC04FCBCA3CFCD04 /* Exceptions for "CyrusLyrics" folder in "CyrusLyrics" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DD50F182267CB85B0024D448 /* CyrusLyrics */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		DD420E952D6C0E7D55A0EE28 /* CyrusLyrics */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DD046B8EDC04FCBCA3CFCD04 /* Exceptions for "CyrusLyrics" folder in "CyrusLyrics" target */,
+			);
+			path = CyrusLyrics;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		DD50F180267CB85B0024D448 /* Frameworks */ = {
@@ -75,36 +42,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DD01D8B926E7834800A657F8 /* DataAdapters */ = {
-			isa = PBXGroup;
-			children = (
-				DD01D8BA26E7838500A657F8 /* SheetsV1Adapter.swift */,
-				DD01D8C026E7854400A657F8 /* SheetsV2Adapter.swift */,
-				DDCAF73927BE115C00C7C24C /* OAuthSheetAdapter.swift */,
-			);
-			path = DataAdapters;
-			sourceTree = "<group>";
-		};
-		DD01D8BD26E7842700A657F8 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				DD01D8BE26E7846500A657F8 /* getDefaultGoogleUrl.swift */,
-			);
-			path = Utilities;
-			sourceTree = "<group>";
-		};
-		DD01D8C226E7898900A657F8 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				DD01D8C326E789A800A657F8 /* SheetsAdapter.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
 		DD50F17A267CB85B0024D448 = {
 			isa = PBXGroup;
 			children = (
-				DD50F185267CB85B0024D448 /* CyrusLyrics */,
+				DD420E952D6C0E7D55A0EE28 /* CyrusLyrics */,
 				DD50F184267CB85B0024D448 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -115,77 +56,6 @@
 				DD50F183267CB85B0024D448 /* CyrusLyrics.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		DD50F185267CB85B0024D448 /* CyrusLyrics */ = {
-			isa = PBXGroup;
-			children = (
-				DD01D8C226E7898900A657F8 /* Protocols */,
-				DD01D8BD26E7842700A657F8 /* Utilities */,
-				DD9D4F0D2683E68400AF67CE /* Components */,
-				DD9D4F0C2683E64200AF67CE /* Pages */,
-				DD9D4F0B2683E61C00AF67CE /* Services */,
-				DD50F19F267D07A10024D448 /* Structs */,
-				DD50F186267CB85B0024D448 /* CyrusLyricsApp.swift */,
-				DD50F18A267CB85C0024D448 /* Assets.xcassets */,
-				DD50F18F267CB85C0024D448 /* Info.plist */,
-				DD50F18C267CB85C0024D448 /* Preview Content */,
-			);
-			path = CyrusLyrics;
-			sourceTree = "<group>";
-		};
-		DD50F18C267CB85C0024D448 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				DD50F18D267CB85C0024D448 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		DD50F19F267D07A10024D448 /* Structs */ = {
-			isa = PBXGroup;
-			children = (
-				DD50F1A1267D08E00024D448 /* GSheetStructs.swift */,
-				DD50F1A6267D08F60024D448 /* AppDataStructs.swift */,
-				DD109A3327B557B70079F61D /* APIResponseStructs.swift */,
-				DD70B38927C0076C0092F915 /* FAQStructs.swift */,
-			);
-			path = Structs;
-			sourceTree = "<group>";
-		};
-		DD9D4F0B2683E61C00AF67CE /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				DD01D8B926E7834800A657F8 /* DataAdapters */,
-				DD9D4F09267ED91A00AF67CE /* ShuffleManager.swift */,
-				DD109A2F27B1FCBE0079F61D /* StateManager.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		DD9D4F0C2683E64200AF67CE /* Pages */ = {
-			isa = PBXGroup;
-			children = (
-				DD50F188267CB85B0024D448 /* ContentView.swift */,
-				DD50F199267CBE9B0024D448 /* LinkDetailView.swift */,
-				DD50F1AB267D31870024D448 /* CategoryDetailView.swift */,
-				DD50F1B0267D7B610024D448 /* SubCategoryDetailView.swift */,
-				DD109A2D27B1DA890079F61D /* CategoryList.swift */,
-				DD109A3127B22E2E0079F61D /* SetDataView.swift */,
-				DD70B38727C006CF0092F915 /* HowItWorksView.swift */,
-			);
-			path = Pages;
-			sourceTree = "<group>";
-		};
-		DD9D4F0D2683E68400AF67CE /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				DD50F196267CB8DF0024D448 /* WebView.swift */,
-				DD9D4F0E2684A66000AF67CE /* ShuffleToolbarItem.swift */,
-				DD9D4F102684AB1700AF67CE /* LyricsView.swift */,
-				DD084C17268948ED009CF586 /* SpotifyButton.swift */,
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +72,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DD420E952D6C0E7D55A0EE28 /* CyrusLyrics */,
 			);
 			name = CyrusLyrics;
 			productName = CyrusLyrics;
@@ -223,7 +96,6 @@
 				};
 			};
 			buildConfigurationList = DD50F17E267CB85B0024D448 /* Build configuration list for PBXProject "CyrusLyrics" */;
-			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -231,6 +103,7 @@
 				Base,
 			);
 			mainGroup = DD50F17A267CB85B0024D448;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = DD50F184267CB85B0024D448 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -245,8 +118,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD50F18E267CB85C0024D448 /* Preview Assets.xcassets in Resources */,
-				DD50F18B267CB85C0024D448 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,29 +128,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD01D8C126E7854400A657F8 /* SheetsV2Adapter.swift in Sources */,
-				DD50F197267CB8DF0024D448 /* WebView.swift in Sources */,
-				DD109A3027B1FCBE0079F61D /* StateManager.swift in Sources */,
-				DD50F1A2267D08E00024D448 /* GSheetStructs.swift in Sources */,
-				DD50F189267CB85B0024D448 /* ContentView.swift in Sources */,
-				DD9D4F112684AB1700AF67CE /* LyricsView.swift in Sources */,
-				DD50F187267CB85B0024D448 /* CyrusLyricsApp.swift in Sources */,
-				DD109A2E27B1DA8A0079F61D /* CategoryList.swift in Sources */,
-				DD9D4F0A267ED91A00AF67CE /* ShuffleManager.swift in Sources */,
-				DD70B38A27C0076C0092F915 /* FAQStructs.swift in Sources */,
-				DD109A3427B557B70079F61D /* APIResponseStructs.swift in Sources */,
-				DD50F19A267CBE9B0024D448 /* LinkDetailView.swift in Sources */,
-				DD70B38827C006CF0092F915 /* HowItWorksView.swift in Sources */,
-				DDCAF73A27BE115C00C7C24C /* OAuthSheetAdapter.swift in Sources */,
-				DD084C18268948ED009CF586 /* SpotifyButton.swift in Sources */,
-				DD01D8BF26E7846500A657F8 /* getDefaultGoogleUrl.swift in Sources */,
-				DD01D8C426E789A800A657F8 /* SheetsAdapter.swift in Sources */,
-				DD50F1A7267D08F60024D448 /* AppDataStructs.swift in Sources */,
-				DD01D8BB26E7838500A657F8 /* SheetsV1Adapter.swift in Sources */,
-				DD109A3227B22E2E0079F61D /* SetDataView.swift in Sources */,
-				DD50F1AC267D31870024D448 /* CategoryDetailView.swift in Sources */,
-				DD50F1B1267D7B610024D448 /* SubCategoryDetailView.swift in Sources */,
-				DD9D4F0F2684A66100AF67CE /* ShuffleToolbarItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
