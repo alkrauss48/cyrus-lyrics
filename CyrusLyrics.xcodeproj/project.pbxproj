@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		DD8A777BAEB992471A16CCDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD50F17B267CB85B0024D448 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD50F182267CB85B0024D448;
+			remoteInfo = CyrusLyrics;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		DD50F183267CB85B0024D448 /* CyrusLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CyrusLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DDF064D7F88F819CABBF64CF /* CyrusLyricsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CyrusLyricsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +40,22 @@
 			path = CyrusLyrics;
 			sourceTree = "<group>";
 		};
+		DDAC26C34BC184239C42B8D2 /* CyrusLyricsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CyrusLyricsTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		DD50F180267CB85B0024D448 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DDACA7146FFBF242487227BE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				DD420E952D6C0E7D55A0EE28 /* CyrusLyrics */,
+				DDAC26C34BC184239C42B8D2 /* CyrusLyricsTests */,
 				DD50F184267CB85B0024D448 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				DD50F183267CB85B0024D448 /* CyrusLyrics.app */,
+				DDF064D7F88F819CABBF64CF /* CyrusLyricsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,6 +86,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		DD0B384A879C993A29127BD8 /* CyrusLyricsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DDE33F6E033A3BFC79811DB9 /* Build configuration list for PBXNativeTarget "CyrusLyricsTests" */;
+			buildPhases = (
+				DD203A7C181E4BB97F0604A0 /* Sources */,
+				DDACA7146FFBF242487227BE /* Frameworks */,
+				DD789DF913266F56578F8990 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD3361249790EC99D3023248 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DDAC26C34BC184239C42B8D2 /* CyrusLyricsTests */,
+			);
+			name = CyrusLyricsTests;
+			productName = CyrusLyricsTests;
+			productReference = DDF064D7F88F819CABBF64CF /* CyrusLyricsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DD50F182267CB85B0024D448 /* CyrusLyrics */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD50F192267CB85C0024D448 /* Build configuration list for PBXNativeTarget "CyrusLyrics" */;
@@ -90,6 +136,10 @@
 				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
+					DD0B384A879C993A29127BD8 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = DD50F182267CB85B0024D448;
+					};
 					DD50F182267CB85B0024D448 = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -109,6 +159,7 @@
 			projectRoot = "";
 			targets = (
 				DD50F182267CB85B0024D448 /* CyrusLyrics */,
+				DD0B384A879C993A29127BD8 /* CyrusLyricsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -121,9 +172,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD789DF913266F56578F8990 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DD203A7C181E4BB97F0604A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DD50F17F267CB85B0024D448 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,7 +198,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		DD3361249790EC99D3023248 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD50F182267CB85B0024D448 /* CyrusLyrics */;
+			targetProxy = DD8A777BAEB992471A16CCDA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		DD204FC477771121788E7ACF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyruskrauss.cyruslyricsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CyrusLyrics.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CyrusLyrics";
+			};
+			name = Debug;
+		};
+		DD4DF9857BFF640D208E4C53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cyruskrauss.cyruslyricsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CyrusLyrics.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CyrusLyrics";
+			};
+			name = Release;
+		};
 		DD50F190267CB85C0024D448 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -319,6 +428,15 @@
 			buildConfigurations = (
 				DD50F193267CB85C0024D448 /* Debug */,
 				DD50F194267CB85C0024D448 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DDE33F6E033A3BFC79811DB9 /* Build configuration list for PBXNativeTarget "CyrusLyricsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD204FC477771121788E7ACF /* Debug */,
+				DD4DF9857BFF640D208E4C53 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
